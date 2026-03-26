@@ -1,0 +1,380 @@
+@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --pe-blue:       #1a1adb;
+  --pe-blue-dark:  #1212a8;
+  --pe-text:       #111111;
+  --pe-text-light: #444444;
+  --pe-text-muted: #888888;
+  --pe-bg:         #f4f5f7;
+  --pe-card-bg:    #ffffff;
+  --pe-radius:     12px;
+  --pe-shadow:     0 2px 16px rgba(0,0,0,0.07);
+  --pe-shadow-h:   0 8px 32px rgba(26,26,219,0.13);
+  --pe-ease:       0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  --pe-font:       'Alexandria', sans-serif;
+}
+
+/* ════════════════════════════════════════════
+   PAGE
+════════════════════════════════════════════ */
+.pe-page {
+  font-family: var(--pe-font);
+  background: var(--pe-bg);
+  min-height: 100vh;
+  padding: 2rem 5vw 5rem;
+  box-sizing: border-box;
+  color: var(--pe-text);
+}
+
+/* ════════════════════════════════════════════
+   BREADCRUMB
+════════════════════════════════════════════ */
+.pe-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.83rem;
+  color: var(--pe-text-muted);
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.pe-bc-link { color: var(--pe-text-muted); text-decoration: none; }
+.pe-bc-link:hover { color: var(--pe-blue); text-decoration: underline; }
+.pe-bc-sep     { color: var(--pe-text-muted); }
+.pe-bc-current { color: var(--pe-blue); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ════════════════════════════════════════════
+   HEADER
+════════════════════════════════════════════ */
+.pe-header { margin-bottom: 2.5rem; max-width: 900px; }
+.pe-title {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--pe-blue);
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  margin: 0 0 1rem;
+}
+.pe-desc {
+  font-size: clamp(0.875rem, 1.4vw, 0.97rem);
+  line-height: 1.75;
+  color: var(--pe-text-light);
+  margin: 0 0 0.75rem;
+}
+.pe-desc--short { font-weight: 400; }
+.pe-desc--long  { font-weight: 300; }
+
+/* ════════════════════════════════════════════
+   GRID
+════════════════════════════════════════════ */
+.pe-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+/* ════════════════════════════════════════════
+   CARD  —  MOBILE-FIRST  (flex-column, auto height)
+   Image is ALWAYS visible. Info panel slides in
+   below the image when tapped (touch) or hovers
+   on desktop.
+════════════════════════════════════════════ */
+.pe-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--pe-card-bg);
+  border-radius: var(--pe-radius);
+  box-shadow: var(--pe-shadow);
+  overflow: hidden;
+  /* No fixed height — card grows to fit content */
+}
+
+/* ── Image zone ─────────────────────────── */
+.pe-card-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f2f6;
+  padding: 2rem 1.75rem;
+  box-sizing: border-box;
+  text-decoration: none;
+  min-height: 220px;
+  flex-shrink: 0;
+  /* Image area NEVER collapses or hides */
+}
+.pe-card-img {
+  width: 100%;
+  max-width: 260px;
+  height: 190px;
+  object-fit: contain;
+  display: block;
+  transition: transform var(--pe-ease);
+}
+
+/* ── Info panel (touch/mobile) ──────────────
+   Hidden by default with max-height: 0.
+   Slides open on pe-card--open.
+   Uses max-height transition for smooth reveal.
+   Image column is unaffected — it sits above.
+──────────────────────────────────────────── */
+.pe-card-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0 1.5rem;
+  background: var(--pe-card-bg);
+  /* Collapsed by default on touch */
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition:
+    max-height var(--pe-ease),
+    opacity    var(--pe-ease),
+    padding    var(--pe-ease);
+}
+
+/* Open state — slides down, image stays visible above */
+.pe-card--open .pe-card-right {
+  max-height: 400px;   /* large enough for any content */
+  opacity: 1;
+  padding: 1.4rem 1.5rem 1.1rem;
+}
+
+.pe-card-desc {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--pe-text);
+  line-height: 1.7;
+  margin: 0;
+  white-space: normal;
+}
+.pe-card-desc strong { font-weight: 700; }
+
+.pe-card-tip {
+  font-size: 0.87rem;
+  color: var(--pe-text-light);
+  line-height: 1.65;
+  margin: 0;
+  white-space: normal;
+}
+.pe-tip-label { font-weight: 700; color: var(--pe-text); }
+
+/* ── Label bar ──────────────────────────── */
+.pe-card-label {
+  background-color: var(--pe-blue);
+  color: #ffffff;
+  font-family: var(--pe-font);
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.95rem 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  transition: background-color var(--pe-ease);
+  flex-shrink: 0;
+  margin-top: auto;
+}
+.pe-card-label:hover { background-color: var(--pe-blue-dark); }
+
+/* Chevron rotates when card is open */
+.pe-card-label .pe-chevron {
+  transition: transform var(--pe-ease);
+  flex-shrink: 0;
+}
+.pe-card--open .pe-card-label .pe-chevron {
+  transform: rotate(90deg);
+}
+
+
+/* ════════════════════════════════════════════
+   RESPONSIVE  (mobile-first, min-width up)
+════════════════════════════════════════════ */
+
+/* ── Ultra-small  < 360px ── */
+@media (max-width: 359px) {
+  .pe-page       { padding: 1rem 3.5vw 3rem; }
+  .pe-title      { font-size: 1.5rem; }
+  .pe-card-left  { min-height: 180px; padding: 1.5rem 1.25rem; }
+  .pe-card-img   { max-width: 200px; height: 150px; }
+  .pe-card-right { padding: 0 1.1rem; gap: 0.6rem; }
+  .pe-card--open .pe-card-right { padding: 1rem 1.1rem 0.9rem; }
+  .pe-card-desc  { font-size: 0.78rem; }
+  .pe-card-tip   { font-size: 0.76rem; }
+  .pe-card-label { font-size: 0.8rem; padding: 0.7rem 0.9rem; }
+}
+
+/* ── Small phones  360–479px ── */
+@media (min-width: 360px) and (max-width: 479px) {
+  .pe-page       { padding: 1.25rem 4vw 3.5rem; }
+  .pe-title      { font-size: 1.65rem; }
+  .pe-card-left  { min-height: 200px; padding: 1.75rem 1.5rem; }
+  .pe-card-img   { max-width: 220px; height: 168px; }
+  .pe-card-right { padding: 0 1.25rem; }
+  .pe-card--open .pe-card-right { padding: 1.1rem 1.25rem 1rem; }
+  .pe-card-desc  { font-size: 0.82rem; }
+  .pe-card-tip   { font-size: 0.79rem; }
+  .pe-card-label { font-size: 0.84rem; padding: 0.8rem 1rem; }
+}
+
+/* ── Mid phones  480–639px ── */
+@media (min-width: 480px) and (max-width: 639px) {
+  .pe-page       { padding: 1.5rem 4vw 4rem; }
+  .pe-card-left  { min-height: 210px; padding: 1.75rem; }
+  .pe-card-img   { max-width: 230px; height: 175px; }
+  .pe-card-right { padding: 0 1.35rem; }
+  .pe-card--open .pe-card-right { padding: 1.2rem 1.35rem 1rem; }
+  .pe-card-desc  { font-size: 0.85rem; }
+  .pe-card-tip   { font-size: 0.82rem; }
+}
+
+/* ── Tablet portrait  640–767px  →  2 columns ── */
+@media (min-width: 640px) and (max-width: 767px) {
+  .pe-page       { padding: 1.5rem 4vw 4rem; }
+  .pe-grid       { grid-template-columns: repeat(2, 1fr); gap: 1.1rem; }
+  .pe-card-left  { min-height: 210px; padding: 1.75rem 1.5rem; }
+  .pe-card-img   { max-width: 220px; height: 175px; }
+  .pe-card-right { padding: 0 1.25rem; gap: 0.65rem; }
+  .pe-card--open .pe-card-right { padding: 1.1rem 1.25rem 1rem; }
+  .pe-card-desc  { font-size: 0.83rem; }
+  .pe-card-tip   { font-size: 0.8rem; }
+  .pe-card-label { font-size: 0.86rem; padding: 0.85rem 1rem; }
+}
+
+/* ── Tablet landscape  768–1023px  →  2 columns ── */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pe-page       { padding: 1.75rem 4.5vw 4.5rem; }
+  .pe-grid       { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+  .pe-card-left  { min-height: 240px; padding: 2rem 1.75rem; }
+  .pe-card-img   { max-width: 240px; height: 195px; }
+  .pe-card-right { padding: 0 1.4rem; gap: 0.7rem; }
+  .pe-card--open .pe-card-right { padding: 1.25rem 1.4rem 1.1rem; }
+  .pe-card-desc  { font-size: 0.87rem; }
+  .pe-card-tip   { font-size: 0.84rem; }
+  .pe-card-label { font-size: 0.9rem; padding: 0.9rem 1.1rem; }
+}
+
+
+/* ════════════════════════════════════════════
+   DESKTOP  1024px+  with  hover: hover
+   Switch to the side-panel sliding layout.
+   Image stays in left column at full height —
+   NEVER collapses.
+════════════════════════════════════════════ */
+@media (min-width: 1024px) and (hover: hover) {
+
+  .pe-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.4rem;
+  }
+
+  /* Fixed-height CSS grid — 3 areas: img | info | label */
+  .pe-card {
+    display: grid;
+    grid-template-columns: 1fr 0px;   /* info panel starts collapsed */
+    grid-template-rows: 1fr auto;
+    grid-template-areas:
+      "img  info"
+      "label label";
+    height: 360px;
+    transition:
+      grid-template-columns var(--pe-ease),
+      box-shadow            var(--pe-ease);
+  }
+
+  /* Hover → expand info panel to the right */
+  .pe-card--open {
+    grid-template-columns: 1fr 320px;
+    box-shadow: var(--pe-shadow-h);
+  }
+
+  /* Image column — occupies the left cell fully, NEVER hides */
+  .pe-card-left {
+    grid-area: img;
+    min-height: unset;
+    height: 100%;
+    width: 100%;
+    padding: 2rem 1.75rem;
+    /* overflow:hidden on .pe-card clips it to its grid cell */
+  }
+  .pe-card-img {
+    width: 100%;
+    max-width: 100%;
+    height: 230px;
+  }
+  .pe-card--open .pe-card-img {
+    transform: scale(0.93);
+  }
+
+  /* Info panel — side column, hidden when width is 0 */
+  .pe-card-right {
+    grid-area: info;
+    /* Reset touch styles */
+    max-height: none;
+    overflow: hidden;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.85rem;
+    opacity: 0;
+    padding: 0;
+    transition:
+      opacity  var(--pe-ease),
+      padding  var(--pe-ease);
+  }
+  .pe-card--open .pe-card-right {
+    max-height: none;
+    opacity: 1;
+    padding: 1.5rem 1.25rem 1.5rem 0.75rem;
+  }
+
+  /* Label bar */
+  .pe-card-label {
+    grid-area: label;
+    margin-top: 0;
+    font-size: 0.95rem;
+    padding: 0.95rem 1.2rem;
+  }
+
+  /* Hide chevron rotation on desktop (irrelevant) */
+  .pe-card--open .pe-card-label .pe-chevron {
+    transform: none;
+  }
+
+  .pe-card-desc { font-size: 0.88rem; line-height: 1.7; }
+  .pe-card-tip  { font-size: 0.85rem; line-height: 1.65; }
+}
+
+/* ── Large desktop  1280–1439px ── */
+@media (min-width: 1280px) and (max-width: 1439px) and (hover: hover) {
+  .pe-grid       { gap: 1.5rem; }
+  .pe-card       { height: 370px; }
+  .pe-card--open { grid-template-columns: 1fr 330px; }
+  .pe-card-img   { height: 240px; }
+}
+
+/* ── XL desktop  1440–1919px ── */
+@media (min-width: 1440px) and (max-width: 1919px) and (hover: hover) {
+  .pe-page       { padding: 2.5rem 6vw 5rem; }
+  .pe-grid       { gap: 1.6rem; }
+  .pe-card       { height: 390px; }
+  .pe-card--open { grid-template-columns: 1fr 350px; }
+  .pe-card-left  { padding: 2.25rem 2rem; }
+  .pe-card-img   { height: 255px; }
+  .pe-card-desc  { font-size: 0.91rem; }
+  .pe-card-tip   { font-size: 0.87rem; }
+  .pe-card-label { font-size: 1rem; padding: 1rem 1.3rem; }
+}
+
+/* ── Ultra-large  1920px+ ── */
+@media (min-width: 1920px) and (hover: hover) {
+  .pe-page       { padding: 3rem 8vw 6rem; }
+  .pe-grid       { grid-template-columns: repeat(4, 1fr); gap: 1.75rem; }
+  .pe-card       { height: 420px; }
+  .pe-card--open { grid-template-columns: 1fr 380px; }
+  .pe-card-left  { padding: 2.5rem 2.25rem; }
+  .pe-card-img   { height: 280px; }
+  .pe-card-desc  { font-size: 0.95rem; }
+  .pe-card-tip   { font-size: 0.91rem; }
+  .pe-card-label { font-size: 1.05rem; padding: 1.1rem 1.4rem; }
+}

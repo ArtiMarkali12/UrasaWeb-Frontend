@@ -1,0 +1,6 @@
+/* DELETE or remove these from App.css */
+.App {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;   /* ← this is the culprit */
+}
