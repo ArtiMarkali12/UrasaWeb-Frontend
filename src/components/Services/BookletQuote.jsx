@@ -1,420 +1,7 @@
-// import React, { useState, useEffect } from "react";
-// import "./BookletQuote.css";
-
-// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-// const defaultForm = {
-//   quantity: "",
-//   bookSize: "",
-//   orientation: "",
-//   bindingStyle: {
-//     bindingType: "",
-//     coverStyle: "",
-//     coverFlaps: false,
-//   },
-//   interiorSpecifications: {
-//     numberOfPages: "",
-//     printColor: "",
-//     paperWeight: "",
-//     paperType: "",
-//     coverFinish: "",
-//   },
-//   specialFinishing: {
-//     printFinishing: [],
-//     pageEdges: "",
-//   },
-//   packaging: "",
-//   additionalNotes: "",
-//   customerDetails: {
-//     name: "",
-//     email: "",
-//     phone: "",
-//     address: "",
-//   },
-// };
-
-// const orientationOptions = ["Portrait", "Landscape"];
-
-// const BookletQuote = () => {
-//   const [options, setOptions] = useState({
-//     bookSizes: [],
-//     bindingTypes: [],
-//     coverStyles: [],
-//     printColors: [],
-//     paperWeights: [],
-//     paperTypes: [],
-//     coverFinishes: [],
-//     pageEdges: [],
-//     packaging: [],
-//     specialFinishing: [],
-//   });
-
-//   // Safe getter — always returns an array even if API sends undefined/null
-//   const getOpt = (key) => (Array.isArray(options[key]) ? options[key] : []);
-
-//   const [form, setForm] = useState(defaultForm);
-//   const [loading, setLoading] = useState(false);
-//   const [submitted, setSubmitted] = useState(false);
-//   const [error, setError] = useState("");
-
-//   useEffect(() => {
-//     fetch(`${API_BASE_URL}/api/booklet-quote/options`)
-//       .then((res) => res.json())
-//       .then((data) => {
-//         if (data.success) setOptions(data.data);
-//       })
-//       .catch(() => {});
-//   }, []);
-
-//   // Check if all required fields are filled
-//   const isFormValid = () => {
-//     const {
-//       quantity,
-//       bookSize,
-//       orientation,
-//       bindingStyle,
-//       interiorSpecifications,
-//       specialFinishing,
-//       packaging,
-//       customerDetails,
-//     } = form;
-
-//     return (
-//       quantity &&
-//       bookSize &&
-//       orientation &&
-//       bindingStyle.bindingType &&
-//       bindingStyle.coverStyle &&
-//       interiorSpecifications.numberOfPages &&
-//       interiorSpecifications.printColor &&
-//       interiorSpecifications.paperWeight &&
-//       interiorSpecifications.paperType &&
-//       interiorSpecifications.coverFinish &&
-//       specialFinishing.pageEdges &&
-//       packaging &&
-//       customerDetails.name &&
-//       customerDetails.email &&
-//       customerDetails.phone
-//     );
-//   };
-
-//   const handleChange = (path, value) => {
-//     setForm((prev) => {
-//       const keys = path.split(".");
-//       if (keys.length === 1) return { ...prev, [keys[0]]: value };
-//       return {
-//         ...prev,
-//         [keys[0]]: { ...prev[keys[0]], [keys[1]]: value },
-//       };
-//     });
-//   };
-
-//   const handleMultiSelect = (value) => {
-//     setForm((prev) => {
-//       const current = prev.specialFinishing.printFinishing;
-//       const updated = current.includes(value)
-//         ? current.filter((v) => v !== value)
-//         : [...current, value];
-//       return {
-//         ...prev,
-//         specialFinishing: { ...prev.specialFinishing, printFinishing: updated },
-//       };
-//     });
-//   };
-
-//   const handleSubmit = async () => {
-//     if (!isFormValid()) return;
-//     setLoading(true);
-//     setError("");
-//     try {
-//       const res = await fetch(`${API_BASE_URL}/api/booklet-quote`, {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(form),
-//       });
-//       const data = await res.json();
-//       if (data.success) {
-//         setSubmitted(true);
-//         setForm(defaultForm);
-//       } else {
-//         setError("Something went wrong. Please try again.");
-//       }
-//     } catch {
-//       setError("Network error. Please try again.");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   if (submitted) {
-//     return (
-//       <div className="bq-success-screen">
-//         <div className="bq-success-card">
-//           <div className="bq-success-icon">✓</div>
-//           <h2>Quote Submitted!</h2>
-//           <p>We'll get back to you shortly with your booklet quote.</p>
-//           <button className="bq-restart-btn" onClick={() => setSubmitted(false)}>
-//             Submit Another Quote
-//           </button>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   const SelectField = ({ label, path, optionsList, placeholder }) => (
-//     <div className="bq-field">
-//       <label className="bq-label">{label}</label>
-//       <div className="bq-select-wrap">
-//         <select
-//           className="bq-select"
-//           value={path.includes(".") ? form[path.split(".")[0]][path.split(".")[1]] : form[path]}
-//           onChange={(e) => handleChange(path, e.target.value)}
-//         >
-//           <option value="">{placeholder || `Select ${label}`}</option>
-//           {optionsList.map((opt) => (
-//             <option key={opt} value={opt}>{opt}</option>
-//           ))}
-//         </select>
-//         <span className="bq-select-arrow">▾</span>
-//       </div>
-//     </div>
-//   );
-
-//   return (
-//     <div className="bq-wrapper">
-//       <p className="bq-intro-text">
-//         Fill information as per your requirements to complete the steps and get your quote !
-//       </p>
-
-//       {/* STEP 1: General Details */}
-//       <div className="bq-step">
-//         <div className="bq-step-header">
-//           <span className="bq-step-number">1.</span>
-//           <span className="bq-step-title">General Details</span>
-//         </div>
-//         <div className="bq-step-body">
-//           <div className="bq-row bq-row-3">
-//             <div className="bq-field">
-//               <label className="bq-label">Quantity <span className="bq-req">*</span></label>
-//               <input
-//                 className="bq-input"
-//                 type="number"
-//                 placeholder="e.g. 500"
-//                 value={form.quantity}
-//                 onChange={(e) => handleChange("quantity", e.target.value)}
-//                 min="1"
-//               />
-//             </div>
-//             <SelectField label="Size" path="bookSize" optionsList={getOpt("bookSizes")} placeholder="Select Size" />
-//             <SelectField label="Orientation" path="orientation" optionsList={orientationOptions} placeholder="Select Orientation" />
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* STEP 2: Cover */}
-//       <div className="bq-step">
-//         <div className="bq-step-header">
-//           <span className="bq-step-number">2.</span>
-//           <span className="bq-step-title">Cover</span>
-//         </div>
-//         <div className="bq-step-body">
-//           <div className="bq-row bq-row-4">
-//             <SelectField label="Paper Grammage" path="interiorSpecifications.paperWeight" optionsList={getOpt("paperWeights")} />
-//             <SelectField label="Cover Finish" path="interiorSpecifications.coverFinish" optionsList={getOpt("coverFinishes")} />
-//             <div className="bq-field">
-//               <label className="bq-label">Cover Flaps (French Flaps)</label>
-//               <div className="bq-select-wrap">
-//                 <select
-//                   className="bq-select"
-//                   value={form.bindingStyle.coverFlaps ? "yes" : "no"}
-//                   onChange={(e) => handleChange("bindingStyle.coverFlaps", e.target.value === "yes")}
-//                 >
-//                   <option value="no">No</option>
-//                   <option value="yes">Yes</option>
-//                 </select>
-//                 <span className="bq-select-arrow">▾</span>
-//               </div>
-//             </div>
-//             <SelectField label="Edges" path="specialFinishing.pageEdges" optionsList={getOpt("pageEdges")} />
-//           </div>
-//           <div className="bq-row bq-row-2 bq-mt">
-//             <div className="bq-field bq-field-full">
-//               <label className="bq-label">Special Finishing</label>
-//               <div className="bq-multiselect-wrap">
-//                 {getOpt("specialFinishing").length === 0 ? (
-//                   <span className="bq-no-opts">No options available</span>
-//                 ) : (
-//                   getOpt("specialFinishing").map((opt) => (
-//                     <label key={opt} className="bq-chip-label">
-//                       <input
-//                         type="checkbox"
-//                         checked={form.specialFinishing.printFinishing.includes(opt)}
-//                         onChange={() => handleMultiSelect(opt)}
-//                       />
-//                       <span>{opt}</span>
-//                     </label>
-//                   ))
-//                 )}
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* STEP 3: Interior Specification */}
-//       <div className="bq-step">
-//         <div className="bq-step-header">
-//           <span className="bq-step-number">3.</span>
-//           <span className="bq-step-title">Interior Specification</span>
-//         </div>
-//         <div className="bq-step-body">
-//           <div className="bq-row bq-row-4">
-//             <div className="bq-field">
-//               <label className="bq-label">No. of Pages <span className="bq-req">*</span></label>
-//               <input
-//                 className="bq-input"
-//                 type="number"
-//                 placeholder="e.g. 48"
-//                 value={form.interiorSpecifications.numberOfPages}
-//                 onChange={(e) => handleChange("interiorSpecifications.numberOfPages", e.target.value)}
-//                 min="4"
-//               />
-//             </div>
-//             <SelectField label="Print Color" path="interiorSpecifications.printColor" optionsList={getOpt("printColors")} />
-//             <SelectField label="Paper Grammage" path="interiorSpecifications.paperWeight" optionsList={getOpt("paperWeights")} />
-//             <SelectField label="Paper Type" path="interiorSpecifications.paperType" optionsList={getOpt("paperTypes")} />
-//           </div>
-//           <div className="bq-row bq-mt">
-//             <SelectField label="Binding Type" path="bindingStyle.bindingType" optionsList={getOpt("bindingTypes")} />
-//             <SelectField label="Cover Style" path="bindingStyle.coverStyle" optionsList={getOpt("coverStyles")} />
-//             <SelectField label="Packaging" path="packaging" optionsList={getOpt("packaging")} />
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* STEP 4: Additional Note */}
-//       <div className="bq-step">
-//         <div className="bq-step-header">
-//           <span className="bq-step-number">4.</span>
-//           <span className="bq-step-title">Additional Note <span className="bq-optional">(Optional)</span></span>
-//         </div>
-//         <div className="bq-step-body">
-//           <p className="bq-note-hint">Please give us any special information or instructions. (If none, type Null)</p>
-//           <textarea
-//             className="bq-textarea"
-//             rows={4}
-//             placeholder="Enter any special instructions or notes here..."
-//             value={form.additionalNotes}
-//             onChange={(e) => handleChange("additionalNotes", e.target.value)}
-//           />
-//         </div>
-//       </div>
-
-//       {/* STEP 5: Customer Details */}
-//       <div className="bq-step">
-//         <div className="bq-step-header">
-//           <span className="bq-step-number">5.</span>
-//           <span className="bq-step-title"></span>
-//         </div>
-//         <div className="bq-step-body">
-//           <div className="bq-row bq-row-3">
-//             <div className="bq-field">
-//               <label className="bq-label">Your Name / Project name <span className="bq-req">*</span></label>
-//               <input
-//                 className="bq-input"
-//                 type="text"
-//                 placeholder="Your Name / Project Name"
-//                 value={form.customerDetails.name}
-//                 onChange={(e) => handleChange("customerDetails.name", e.target.value)}
-//               />
-//             </div>
-//             <div className="bq-field">
-//               <label className="bq-label">Email ID <span className="bq-req">*</span></label>
-//               <input
-//                 className="bq-input"
-//                 type="email"
-//                 placeholder="Email ID"
-//                 value={form.customerDetails.email}
-//                 onChange={(e) => handleChange("customerDetails.email", e.target.value)}
-//               />
-//             </div>
-//             <div className="bq-field">
-//               <label className="bq-label">Phone <span className="bq-req">*</span></label>
-//               <input
-//                 className="bq-input"
-//                 type="tel"
-//                 placeholder="Phone Number"
-//                 value={form.customerDetails.phone}
-//                 onChange={(e) => handleChange("customerDetails.phone", e.target.value)}
-//               />
-//             </div>
-//           </div>
-//           <div className="bq-row bq-mt">
-//             <div className="bq-field">
-//               <label className="bq-label">Address <span className="bq-optional">(Optional)</span></label>
-//               <input
-//                 className="bq-input"
-//                 type="text"
-//                 placeholder="Address"
-//                 value={form.customerDetails.address}
-//                 onChange={(e) => handleChange("customerDetails.address", e.target.value)}
-//               />
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* You're all set + Get Quote */}
-//       {error && <p className="bq-error">{error}</p>}
-
-//       <div className="bq-footer">
-//         <h2 className="bq-allset">You're all set !</h2>
-//         <button
-//           className={`bq-submit-btn ${isFormValid() ? "bq-submit-btn--active" : ""}`}
-//           onClick={handleSubmit}
-//           disabled={!isFormValid() || loading}
-//         >
-//           {loading ? "Submitting..." : "Get Quote"}
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default BookletQuote;
-
-
-
 import React, { useState, useEffect, useCallback } from "react";
 import "./BookletQuote.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-/* ─────────────────────────────────────────────
-   STEP ORDER — categoryKey must match backend
-───────────────────────────────────────────── */
-const STEP_ORDER = [
-  { key: "generalDetails",         label: "General Details"        },
-  { key: "cover",                  label: "Cover"                  },
-  { key: "interiorSpecification",  label: "Interior Specification" },
-  { key: "additionalNote",         label: "Additional Note"        },
-  { key: "customerDetails",        label: "Customer Details"       },
-];
-
-/* ─────────────────────────────────────────────
-   FIELD CONFIG — subcategoryKey → render hints
-───────────────────────────────────────────── */
-const FIELD_CONFIG = {
-  quantity:        { type: "number",     placeholder: "e.g. 500",              required: true  },
-  numberOfPages:   { type: "number",     placeholder: "e.g. 48",               required: true  },
-  additionalNotes: { type: "textarea",   required: false                                        },
-  coverFlaps:      { type: "boolean",    required: false                                        },
-  printFinishing:  { type: "multicheck", required: false                                        },
-  name:            { type: "text",       placeholder: "Your Name / Project Name", required: true  },
-  email:           { type: "email",      placeholder: "Email ID",              required: true  },
-  phone:           { type: "tel",        placeholder: "Phone Number",          required: true  },
-  address:         { type: "text",       placeholder: "Address",               required: false },
-};
 
 /* ─────────────────────────────────────────────
    HELPERS
@@ -423,16 +10,147 @@ const safeArr = (v) => (Array.isArray(v) ? v : []);
 const safeObj = (v) =>
   v && typeof v === "object" && !Array.isArray(v) ? v : {};
 
+/* Determine field type based on backend configuration or fallback to patterns */
+const getFieldTypeInfo = (categoryKey, subcategory) => {
+  // First check if backend provided fieldType
+  if (subcategory?.fieldType) {
+    return {
+      type: subcategory.fieldType,
+      placeholder: subcategory.placeholder || "",
+      required: subcategory.required || false,
+    };
+  }
+
+  // Fallback to pattern matching for backward compatibility
+  const catKey = categoryKey.toLowerCase();
+  const subKey = (
+    subcategory?.displayName ||
+    subcategory?.subcategoryKey ||
+    ""
+  ).toLowerCase();
+
+  // Customer details
+  if (catKey.includes("customer") || catKey.includes("detail")) {
+    if (subKey.includes("name"))
+      return { type: "text", placeholder: "Enter your name", required: true };
+    if (subKey.includes("email"))
+      return { type: "email", placeholder: "Enter your email", required: true };
+    if (subKey.includes("phone"))
+      return {
+        type: "tel",
+        placeholder: "Enter your phone number",
+        required: true,
+      };
+    if (subKey.includes("address"))
+      return {
+        type: "text",
+        placeholder: "Enter your address",
+        required: false,
+      };
+  }
+
+  // General details
+  if (catKey.includes("general")) {
+    if (subKey.includes("quantity"))
+      return { type: "number", placeholder: "e.g., 500", required: true };
+    if (subKey.includes("size")) return { type: "select", required: false };
+    if (subKey.includes("orientation"))
+      return { type: "select", required: false };
+  }
+
+  // Cover related
+  if (catKey.includes("cover")) {
+    if (subKey.includes("flap")) return { type: "boolean", required: false };
+    if (subKey.includes("finish")) return { type: "select", required: false };
+    if (subKey.includes("grammage") || subKey.includes("weight"))
+      return { type: "select", required: false };
+  }
+
+  // Interior
+  if (catKey.includes("interior")) {
+    if (subKey.includes("page") && subKey.includes("number"))
+      return { type: "number", placeholder: "e.g., 48", required: true };
+    if (subKey.includes("color")) return { type: "select", required: false };
+    if (subKey.includes("grammage") || subKey.includes("weight"))
+      return { type: "select", required: false };
+    if (subKey.includes("type")) return { type: "select", required: false };
+    if (subKey.includes("finish")) return { type: "select", required: false };
+  }
+
+  // Special finishing
+  if (catKey.includes("special") || catKey.includes("finishing")) {
+    if (subKey.includes("print")) return { type: "checkbox", required: false };
+    if (subKey.includes("edge")) return { type: "select", required: false };
+  }
+
+  // Additional
+  if (catKey.includes("additional") || catKey.includes("note")) {
+    return { type: "textarea", required: false };
+  }
+
+  // Packaging
+  if (catKey.includes("packaging")) {
+    return { type: "checkbox", required: false };
+  }
+
+  // Default: select dropdown
+  return { type: "select", placeholder: "Select option", required: false };
+};
+
+/* Check if field is required */
+const isRequired = (categoryKey, subcategoryKey) => {
+  const subKey = subcategoryKey.toLowerCase();
+  return (
+    subKey.includes("quantity") ||
+    subKey.includes("name") ||
+    subKey.includes("email") ||
+    subKey.includes("phone") ||
+    (subKey.includes("page") && subKey.includes("number"))
+  );
+};
+
+/* Build empty form from categories */
 const buildEmptyForm = (categories) => {
   const form = {};
-  Object.values(safeObj(categories)).forEach((cat) => {
-    Object.entries(safeObj(cat?.subcategories)).forEach(([subKey]) => {
-      const cfg = FIELD_CONFIG[subKey] || {};
-      if (cfg.type === "multicheck") form[subKey] = [];
-      else if (cfg.type === "boolean") form[subKey] = false;
-      else form[subKey] = "";
-    });
+
+  Object.entries(categories).forEach(([catKey, category]) => {
+    // Handle subcategories
+    Object.entries(safeObj(category?.subcategories)).forEach(
+      ([subKey, subcategory]) => {
+        const fieldInfo = getFieldTypeInfo(catKey, subcategory);
+
+        if (fieldInfo.type === "checkbox") {
+          form[subKey] = [];
+        } else if (fieldInfo.type === "boolean") {
+          form[subKey] = false;
+        } else {
+          form[subKey] = "";
+        }
+      },
+    );
+
+    // Handle direct field type (for categories without subcategories like "Additional Notes")
+    const hasDirectField =
+      category?.fieldType &&
+      Object.keys(safeObj(category?.subcategories)).length === 0;
+    if (hasDirectField) {
+      const fieldInfo = getFieldTypeInfo(catKey, category);
+      if (fieldInfo.type === "checkbox") {
+        form[catKey] = [];
+      } else if (fieldInfo.type === "boolean") {
+        form[catKey] = false;
+      } else {
+        form[catKey] = "";
+      }
+    }
+
+    // Handle direct attributes (for categories like "Special Finishing", "Packaging")
+    const directAttributes = safeArr(category?.attributes);
+    if (directAttributes.length > 0 && !hasDirectField) {
+      form[catKey] = [];
+    }
   });
+
   return form;
 };
 
@@ -441,11 +159,18 @@ const buildEmptyForm = (categories) => {
 ───────────────────────────────────────────── */
 const BookletQuote = () => {
   const [categories, setCategories] = useState({});
-  const [formData,   setFormData]   = useState({});
-  const [loading,    setLoading]    = useState(false);
-  const [fetching,   setFetching]   = useState(true);
-  const [submitted,  setSubmitted]  = useState(false);
-  const [error,      setError]      = useState("");
+  const [formData, setFormData] = useState({});
+  const [customerDetails, setCustomerDetails] = useState({
+    name: "",
+    email: "",
+    country: "",
+  });
+  const [expectedDate, setExpectedDate] = useState("");
+  const [orderDate, setOrderDate] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
   /* ── fetch options ── */
   const fetchOptions = useCallback(() => {
@@ -454,13 +179,15 @@ const BookletQuote = () => {
       .then((r) => r.json())
       .then((data) => {
         if (data.success) {
-          /* support both { categories: {...} } and flat data */
           const cats = safeObj(data.data?.categories ?? data.data);
           setCategories(cats);
           setFormData(buildEmptyForm(cats));
         }
       })
-      .catch(() => {})
+      .catch((err) => {
+        console.error("Error fetching options:", err);
+        setError("Failed to load form options. Please refresh the page.");
+      })
       .finally(() => setFetching(false));
   }, []);
 
@@ -468,11 +195,26 @@ const BookletQuote = () => {
     fetchOptions();
   }, [fetchOptions]);
 
-  /* ── field change ── */
-  const handleChange = (subKey, value) =>
-    setFormData((prev) => ({ ...prev, [subKey]: value }));
+  // Auto-generate order date when name and email are filled
+  useEffect(() => {
+    if (
+      customerDetails.name &&
+      customerDetails.name.trim() &&
+      customerDetails.email &&
+      customerDetails.email.trim() &&
+      !orderDate
+    ) {
+      const today = new Date().toISOString().split("T")[0];
+      setOrderDate(today);
+    }
+  }, [customerDetails.name, customerDetails.email, orderDate]);
 
-  const handleMultiCheck = (subKey, value) =>
+  /* ── field change ── */
+  const handleChange = (subKey, value) => {
+    setFormData((prev) => ({ ...prev, [subKey]: value }));
+  };
+
+  const handleMultiCheck = (subKey, value) => {
     setFormData((prev) => {
       const cur = safeArr(prev[subKey]);
       return {
@@ -482,53 +224,144 @@ const BookletQuote = () => {
           : [...cur, value],
       };
     });
+  };
 
   /* ── validation ── */
   const isFormValid = useCallback(() => {
-    return Object.entries(FIELD_CONFIG).every(([key, cfg]) => {
-      if (!cfg.required) return true;
-      const val = formData[key];
-      if (val === undefined || val === null) return false;
-      if (typeof val === "string") return val.trim() !== "";
-      if (Array.isArray(val)) return val.length > 0;
-      return true;
-    });
-  }, [formData]);
+    if (Object.keys(categories).length === 0) return false;
 
-  /* ── build POST payload matching existing booklet-quote schema ── */
-  const buildPayload = () => ({
-    quantity:    formData.quantity    ?? "",
-    bookSize:    formData.bookSize    ?? "",
-    orientation: formData.orientation ?? "",
-    bindingStyle: {
-      bindingType: formData.bindingType ?? "",
-      coverStyle:  formData.coverStyle  ?? "",
-      coverFlaps:  formData.coverFlaps  ?? false,
-    },
-    interiorSpecifications: {
-      numberOfPages: formData.numberOfPages ?? "",
-      printColor:    formData.printColor    ?? "",
-      paperWeight:   formData.paperWeight   ?? "",
-      paperType:     formData.paperType     ?? "",
-      coverFinish:   formData.coverFinish   ?? "",
-    },
-    specialFinishing: {
-      printFinishing: safeArr(formData.printFinishing),
-      pageEdges:      formData.pageEdges ?? "",
-    },
-    packaging:       formData.packaging       ?? "",
-    additionalNotes: formData.additionalNotes ?? "",
-    customerDetails: {
-      name:    formData.name    ?? "",
-      email:   formData.email   ?? "",
-      phone:   formData.phone   ?? "",
-      address: formData.address ?? "",
-    },
-    timeline: {
-      orderDate:    new Date().toISOString().split("T")[0],
-      expectedDate: "",
-    },
-  });
+    // Validate customer details (name and email required, country optional)
+    if (!customerDetails.name || !customerDetails.name.trim()) return false;
+    if (!customerDetails.email || !customerDetails.email.trim()) return false;
+
+    Object.entries(categories).forEach(([catKey, category]) => {
+      Object.entries(safeObj(category?.subcategories)).forEach(([subKey]) => {
+        if (isRequired(catKey, subKey)) {
+          const val = formData[subKey];
+          if (val === undefined || val === null || val === "") return false;
+          if (Array.isArray(val) && val.length === 0) return false;
+        }
+      });
+    });
+
+    return true;
+  }, [formData, categories, customerDetails]);
+
+  /* ── build POST payload ── */
+  const buildPayload = () => {
+    const payload = {
+      customerDetails: {
+        name: customerDetails.name || "",
+        email: customerDetails.email || "",
+        country: customerDetails.country || "",
+        phone: "",
+        address: "",
+      },
+      timeline: {
+        orderDate: orderDate || new Date().toISOString().split("T")[0],
+        expectedDate: expectedDate || "",
+      },
+    };
+
+    Object.entries(categories).forEach(([catKey, category]) => {
+      Object.entries(safeObj(category?.subcategories)).forEach(
+        ([subKey, subcategory]) => {
+          const value = formData[subKey];
+          const subKeyLower = subKey.toLowerCase();
+
+          // Map to appropriate structure
+          if (subKeyLower.includes("quantity")) {
+            payload.quantity = value;
+          } else if (subKeyLower.includes("size")) {
+            payload.bookSize = value;
+          } else if (subKeyLower.includes("orientation")) {
+            payload.orientation = value;
+          } else if (
+            subKeyLower.includes("binding") &&
+            subKeyLower.includes("type")
+          ) {
+            payload.bindingStyle = payload.bindingStyle || {};
+            payload.bindingStyle.bindingType = value;
+          } else if (
+            subKeyLower.includes("cover") &&
+            subKeyLower.includes("style")
+          ) {
+            payload.bindingStyle = payload.bindingStyle || {};
+            payload.bindingStyle.coverStyle = value;
+          } else if (subKeyLower.includes("flap")) {
+            payload.bindingStyle = payload.bindingStyle || {};
+            // Send as boolean true/false from checkbox
+            payload.bindingStyle.coverFlaps = !!value;
+          } else if (
+            subKeyLower.includes("page") &&
+            subKeyLower.includes("number")
+          ) {
+            payload.interiorSpecifications =
+              payload.interiorSpecifications || {};
+            payload.interiorSpecifications.numberOfPages = value;
+          } else if (subKeyLower.includes("color")) {
+            payload.interiorSpecifications =
+              payload.interiorSpecifications || {};
+            payload.interiorSpecifications.printColor = value;
+          } else if (
+            subKeyLower.includes("weight") ||
+            subKeyLower.includes("grammage")
+          ) {
+            payload.interiorSpecifications =
+              payload.interiorSpecifications || {};
+            payload.interiorSpecifications.paperWeight = value;
+          } else if (
+            subKeyLower.includes("type") &&
+            !subKeyLower.includes("binding")
+          ) {
+            payload.interiorSpecifications =
+              payload.interiorSpecifications || {};
+            payload.interiorSpecifications.paperType = value;
+          } else if (
+            subKeyLower.includes("finish") &&
+            !subKeyLower.includes("print")
+          ) {
+            payload.interiorSpecifications =
+              payload.interiorSpecifications || {};
+            payload.interiorSpecifications.coverFinish = value;
+          } else if (
+            subKeyLower.includes("print") &&
+            subKeyLower.includes("finishing")
+          ) {
+            payload.specialFinishing = payload.specialFinishing || {};
+            payload.specialFinishing.printFinishing = safeArr(value);
+          } else if (
+            subKeyLower.includes("finishing") &&
+            !subKeyLower.includes("cover")
+          ) {
+            // Fallback for "Special Finishing" category
+            payload.specialFinishing = payload.specialFinishing || {};
+            payload.specialFinishing.printFinishing = safeArr(value);
+          } else if (subKeyLower.includes("edge")) {
+            payload.specialFinishing = payload.specialFinishing || {};
+            payload.specialFinishing.pageEdges = value;
+          } else if (subKeyLower.includes("packaging")) {
+            payload.packaging = value;
+          } else if (
+            subKeyLower.includes("note") ||
+            subKeyLower.includes("additional")
+          ) {
+            payload.additionalNotes = value;
+          } else if (subKeyLower.includes("name")) {
+            payload.customerDetails.name = value;
+          } else if (subKeyLower.includes("email")) {
+            payload.customerDetails.email = value;
+          } else if (subKeyLower.includes("phone")) {
+            payload.customerDetails.phone = value;
+          } else if (subKeyLower.includes("address")) {
+            payload.customerDetails.address = value;
+          }
+        },
+      );
+    });
+
+    return payload;
+  };
 
   /* ── submit ── */
   const handleSubmit = async () => {
@@ -536,10 +369,10 @@ const BookletQuote = () => {
     setLoading(true);
     setError("");
     try {
-      const res  = await fetch(`${API_BASE_URL}/api/booklet-quote`, {
-        method:  "POST",
+      const res = await fetch(`${API_BASE_URL}/api/booklet-quote`, {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify(buildPayload()),
+        body: JSON.stringify(buildPayload()),
       });
       const data = await res.json();
       if (data.success) {
@@ -556,36 +389,45 @@ const BookletQuote = () => {
   };
 
   /* ─────────────────────────────────────────
-     FIELD RENDERER
+     FIELD RENDERER - Shows subcategory as label, attributes as dropdown options
   ───────────────────────────────────────── */
-  const renderField = (subKey, subcat) => {
-    const cfg        = FIELD_CONFIG[subKey] || { type: "select", required: false };
-    const attributes = safeArr(subcat?.attributes);
-    const label      = subcat?.label ?? subKey;
-    const value      = formData[subKey] ?? "";
+  const renderField = (categoryKey, subcategoryKey, subcategory) => {
+    const label = subcategory.displayName || subcategoryKey;
+    const attributes = safeArr(subcategory.attributes);
+    const fieldInfo = getFieldTypeInfo(categoryKey, subcategory);
+    const value = formData[subcategoryKey] ?? "";
+    const required =
+      fieldInfo.required || isRequired(categoryKey, subcategoryKey);
 
     /* TEXTAREA */
-    if (cfg.type === "textarea") {
+    if (fieldInfo.type === "textarea") {
       return (
-        <div key={subKey} className="bq-field bq-field-full">
+        <div key={subcategoryKey} className="bq-field bq-field-full">
+          <label className="bq-label">
+            {label}
+            {!required && <span className="bq-optional"> (Optional)</span>}
+          </label>
           <p className="bq-note-hint">
-            Please give us any special information or instructions. (If none, type Null)
+            Please give us any special information or instructions.
           </p>
           <textarea
             className="bq-textarea"
             rows={4}
-            placeholder="Enter any special instructions or notes here..."
+            placeholder={
+              fieldInfo.placeholder ||
+              "Enter any special instructions or notes here..."
+            }
             value={value}
-            onChange={(e) => handleChange(subKey, e.target.value)}
+            onChange={(e) => handleChange(subcategoryKey, e.target.value)}
           />
         </div>
       );
     }
 
-    /* MULTICHECK chips */
-    if (cfg.type === "multicheck") {
+    /* CHECKBOX (for multiple options like special finishing, packaging) */
+    if (fieldInfo.type === "checkbox") {
       return (
-        <div key={subKey} className="bq-field bq-field-full">
+        <div key={subcategoryKey} className="bq-field bq-field-full">
           <label className="bq-label">{label}</label>
           <div className="bq-multiselect-wrap">
             {attributes.length === 0 ? (
@@ -595,8 +437,8 @@ const BookletQuote = () => {
                 <label key={opt} className="bq-chip-label">
                   <input
                     type="checkbox"
-                    checked={safeArr(formData[subKey]).includes(opt)}
-                    onChange={() => handleMultiCheck(subKey, opt)}
+                    checked={safeArr(formData[subcategoryKey]).includes(opt)}
+                    onChange={() => handleMultiCheck(subcategoryKey, opt)}
                   />
                   <span>{opt}</span>
                 </label>
@@ -607,82 +449,124 @@ const BookletQuote = () => {
       );
     }
 
-    /* BOOLEAN yes/no */
-    if (cfg.type === "boolean") {
+    /* RADIO BUTTONS (for single selection from multiple options) */
+    if (fieldInfo.type === "radio") {
       return (
-        <div key={subKey} className="bq-field">
-          <label className="bq-label">{label}</label>
-          <div className="bq-select-wrap">
-            <select
-              className="bq-select"
-              value={value ? "yes" : "no"}
-              onChange={(e) => handleChange(subKey, e.target.value === "yes")}
-            >
-              <option value="no">No</option>
-              <option value="yes">Yes</option>
-            </select>
-            <span className="bq-select-arrow">▾</span>
+        <div key={subcategoryKey} className="bq-field bq-field-full">
+          <label className="bq-label">
+            {label}
+            {required && <span className="bq-req"> *</span>}
+          </label>
+          <div className="bq-radio-group">
+            {attributes.length === 0 ? (
+              <span className="bq-no-opts">No options available</span>
+            ) : (
+              attributes.map((opt) => (
+                <label key={opt} className="bq-radio-item">
+                  <input
+                    type="radio"
+                    name={subcategoryKey}
+                    value={opt}
+                    checked={formData[subcategoryKey] === opt}
+                    onChange={(e) =>
+                      handleChange(subcategoryKey, e.target.value)
+                    }
+                  />
+                  <span>{opt}</span>
+                </label>
+              ))
+            )}
           </div>
         </div>
       );
     }
 
-    /* NUMBER */
-    if (cfg.type === "number") {
+    /* BOOLEAN - Checkbox (like "I agree" checkbox) */
+    if (fieldInfo.type === "boolean") {
       return (
-        <div key={subKey} className="bq-field">
+        <div
+          key={subcategoryKey}
+          className="bq-checkbox-container"
+          style={{ marginTop: "16px" }}
+        >
+          <label className="bq-checkbox-label">
+            <input
+              type="checkbox"
+              checked={value === true || value === "true" || value === "yes"}
+              onChange={(e) => handleChange(subcategoryKey, e.target.checked)}
+            />
+            <span className="bq-checkbox-text">
+              {label}
+              {required && <span className="bq-req"> *</span>}
+            </span>
+          </label>
+        </div>
+      );
+    }
+
+    /* NUMBER */
+    if (fieldInfo.type === "number") {
+      return (
+        <div key={subcategoryKey} className="bq-field">
           <label className="bq-label">
             {label}
-            {cfg.required && <span className="bq-req"> *</span>}
+            {required && <span className="bq-req"> *</span>}
           </label>
           <input
             className="bq-input"
             type="number"
-            placeholder={cfg.placeholder ?? ""}
+            placeholder={fieldInfo.placeholder || ""}
             value={value}
             min="1"
-            onChange={(e) => handleChange(subKey, e.target.value)}
+            onChange={(e) => handleChange(subcategoryKey, e.target.value)}
           />
         </div>
       );
     }
 
     /* TEXT / EMAIL / TEL */
-    if (["text", "email", "tel"].includes(cfg.type)) {
+    if (["text", "email", "tel"].includes(fieldInfo.type)) {
       return (
-        <div key={subKey} className="bq-field">
+        <div key={subcategoryKey} className="bq-field">
           <label className="bq-label">
             {label}
-            {cfg.required  && <span className="bq-req"> *</span>}
-            {!cfg.required && <span className="bq-optional"> (Optional)</span>}
+            {required && <span className="bq-req"> *</span>}
+            {!required && <span className="bq-optional"> (Optional)</span>}
           </label>
           <input
             className="bq-input"
-            type={cfg.type}
-            placeholder={cfg.placeholder ?? ""}
+            type={fieldInfo.type}
+            placeholder={fieldInfo.placeholder || ""}
             value={value}
-            onChange={(e) => handleChange(subKey, e.target.value)}
+            onChange={(e) => handleChange(subcategoryKey, e.target.value)}
           />
         </div>
       );
     }
 
-    /* DEFAULT — dropdown */
+    /* DEFAULT — SELECT DROPDOWN with attributes from backend */
     return (
-      <div key={subKey} className="bq-field">
+      <div key={subcategoryKey} className="bq-field">
         <label className="bq-label">
           {label}
-          {cfg.required && <span className="bq-req"> *</span>}
+          {required && <span className="bq-req"> *</span>}
         </label>
         <div className="bq-select-wrap">
           <select
             className="bq-select"
             value={value}
-            onChange={(e) => handleChange(subKey, e.target.value)}
+            onChange={(e) => handleChange(subcategoryKey, e.target.value)}
+            disabled={attributes.length === 0}
           >
-            <option value="">Select {label}</option>
+            <option value="">
+              {attributes.length === 0
+                ? "No options available"
+                : `Select ${label}`}
+            </option>
             {attributes.map((opt) => (
-              <option key={opt} value={opt}>{opt}</option>
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
             ))}
           </select>
           <span className="bq-select-arrow">▾</span>
@@ -692,41 +576,78 @@ const BookletQuote = () => {
   };
 
   /* ─────────────────────────────────────────
-     STEP RENDERER
+     STEP RENDERER - Categories as steps, subcategories as fields
   ───────────────────────────────────────── */
-  const renderStep = (stepDef, stepIndex) => {
-    const cat          = categories[stepDef.key];
-    const subcategories = safeObj(cat?.subcategories);
-    const subEntries   = Object.entries(subcategories);
-    const isNoteStep   = stepDef.key === "additionalNote";
-    const colCount     = Math.min(Math.max(subEntries.length, 1), 4);
+  const renderStep = (categoryKey, category, stepIndex) => {
+    const subcategories = safeObj(category?.subcategories);
+    const subEntries = Object.entries(subcategories);
+    const directAttributes = safeArr(category?.attributes);
+    const colCount = Math.min(Math.max(subEntries.length, 1), 4);
+
+    // Check if category has no subcategories but has field type configured
+    const hasDirectField = subEntries.length === 0 && category?.fieldType;
 
     return (
-      <div key={stepDef.key} className="bq-step">
+      <div key={categoryKey} className="bq-step">
         <div className="bq-step-header">
           <span className="bq-step-number">{stepIndex + 1}.</span>
           <span className="bq-step-title">
-            {cat?.label ?? stepDef.label}
-            {isNoteStep && (
-              <span className="bq-optional"> (Optional)</span>
-            )}
+            {category.displayName || categoryKey}
           </span>
         </div>
 
         <div className="bq-step-body">
-          {isNoteStep ? (
-            renderField("additionalNotes", {
-              label: "Additional Notes",
-              attributes: [],
-            })
-          ) : subEntries.length === 0 ? (
+          {subEntries.length === 0 &&
+          directAttributes.length === 0 &&
+          !hasDirectField ? (
             <span className="bq-no-opts">No fields configured yet.</span>
           ) : (
-            <div className={`bq-row bq-row-${colCount}`}>
-              {subEntries.map(([subKey, subcat]) =>
-                renderField(subKey, subcat)
+            <>
+              {/* Render category as direct field if no subcategories */}
+              {hasDirectField &&
+                renderField(categoryKey, categoryKey, {
+                  displayName: category.displayName || categoryKey,
+                  fieldType: category.fieldType,
+                  placeholder: category.placeholder,
+                  required: category.required,
+                  attributes: directAttributes,
+                })}
+
+              {/* Render subcategory fields */}
+              {subEntries.length > 0 && (
+                <div className={`bq-row bq-row-${colCount}`}>
+                  {subEntries.map(([subKey, subcat]) =>
+                    renderField(categoryKey, subKey, subcat),
+                  )}
+                </div>
               )}
-            </div>
+
+              {/* Render direct attributes as multi-check if any */}
+              {directAttributes.length > 0 && !hasDirectField && (
+                <div
+                  className="bq-field bq-field-full"
+                  style={{ marginTop: subEntries.length > 0 ? "16px" : "0" }}
+                >
+                  <label className="bq-label">
+                    {category.displayName || categoryKey}
+                  </label>
+                  <div className="bq-multiselect-wrap">
+                    {directAttributes.map((opt) => (
+                      <label key={opt} className="bq-chip-label">
+                        <input
+                          type="checkbox"
+                          checked={safeArr(
+                            formData[categoryKey] || [],
+                          ).includes(opt)}
+                          onChange={() => handleMultiCheck(categoryKey, opt)}
+                        />
+                        <span>{opt}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -764,7 +685,8 @@ const BookletQuote = () => {
     return (
       <div className="bq-wrapper">
         <p className="bq-intro-text">
-          Fill information as per your requirements to complete the steps and get your quote !
+          Fill information as per your requirements to complete the steps and
+          get your quote!
         </p>
         {[1, 2, 3, 4, 5].map((n) => (
           <div key={n} className="bq-step bq-step--skeleton">
@@ -783,28 +705,144 @@ const BookletQuote = () => {
   }
 
   /* ─────────────────────────────────────────
-     MAIN
+     MAIN FORM
   ───────────────────────────────────────── */
   return (
     <div className="bq-wrapper">
       <p className="bq-intro-text">
-        Fill information as per your requirements to complete the steps and get your quote !
+        Fill information as per your requirements to complete the steps and get
+        your quote!
       </p>
 
-      {STEP_ORDER.map((stepDef, idx) => renderStep(stepDef, idx))}
-
-      {error && <p className="bq-error">{error}</p>}
-
-      <div className="bq-footer">
-        <h2 className="bq-allset">You're all set !</h2>
-        <button
-          className={`bq-submit-btn ${isFormValid() ? "bq-submit-btn--active" : ""}`}
-          onClick={handleSubmit}
-          disabled={!isFormValid() || loading}
-        >
-          {loading ? "Submitting..." : "Get Quote"}
-        </button>
+      {/* Customer Information Section - Static */}
+      <div className="bq-step">
+        <div className="bq-step-header">
+          <span className="bq-step-number">1.</span>
+          <span className="bq-step-title">Customer Information</span>
+        </div>
+        <div className="bq-step-body">
+          <div className="bq-row bq-row-3">
+            <div className="bq-field">
+              <label className="bq-label">
+                Your Name <span className="bq-req"> *</span>
+              </label>
+              <input
+                className="bq-input"
+                type="text"
+                placeholder="Enter your name"
+                value={customerDetails.name}
+                onChange={(e) =>
+                  setCustomerDetails({
+                    ...customerDetails,
+                    name: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+            <div className="bq-field">
+              <label className="bq-label">
+                Email Address <span className="bq-req"> *</span>
+              </label>
+              <input
+                className="bq-input"
+                type="email"
+                placeholder="Enter your email"
+                value={customerDetails.email}
+                onChange={(e) =>
+                  setCustomerDetails({
+                    ...customerDetails,
+                    email: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+            <div className="bq-field">
+              <label className="bq-label">
+                Country <span className="bq-optional"> (Optional)</span>
+              </label>
+              <input
+                className="bq-input"
+                type="text"
+                placeholder="Enter your country"
+                value={customerDetails.country}
+                onChange={(e) =>
+                  setCustomerDetails({
+                    ...customerDetails,
+                    country: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </div>
+          <div className="bq-row bq-row-3" style={{ marginTop: "16px" }}>
+            <div className="bq-field">
+              <label className="bq-label">Order Date</label>
+              <input
+                className="bq-input"
+                type="text"
+                value={
+                  orderDate
+                    ? new Date(orderDate).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })
+                    : "Auto-generated after filling details"
+                }
+                readOnly
+                style={{
+                  backgroundColor: orderDate ? "#f0f0ff" : "#f9f9f9",
+                  cursor: "default",
+                }}
+              />
+            </div>
+            <div className="bq-field">
+              <label className="bq-label">
+                Expected Date <span className="bq-optional"> (Optional)</span>
+              </label>
+              <input
+                className="bq-input"
+                type="date"
+                value={expectedDate}
+                onChange={(e) => setExpectedDate(e.target.value)}
+                min={new Date().toISOString().split("T")[0]}
+              />
+            </div>
+          </div>
+        </div>
       </div>
+
+      {Object.keys(categories).length === 0 ? (
+        <div className="bq-no-data">
+          <p>
+            No configuration options available. Please add options from the
+            admin panel.
+          </p>
+        </div>
+      ) : (
+        <>
+          {Object.entries(categories).map(([catKey, category], index) =>
+            renderStep(catKey, category, index + 1),
+          )}
+
+          {error && <p className="bq-error">{error}</p>}
+
+          <div className="bq-footer">
+            <h2 className="bq-allset">You're all set!</h2>
+            <button
+              className={`bq-submit-btn ${
+                isFormValid() ? "bq-submit-btn--active" : ""
+              }`}
+              onClick={handleSubmit}
+              disabled={!isFormValid() || loading}
+            >
+              {loading ? "Submitting..." : "Get Quote"}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };
