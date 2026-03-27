@@ -550,3 +550,38 @@
     font-size: 15px;
   }
 }
+
+/* ====================== */
+/* SKELETON LOADER        */
+/* ====================== */
+.bq-step--skeleton {
+  pointer-events: none;
+}
+
+.bq-skeleton-header {
+  height: 48px;
+  background: linear-gradient(90deg, #eef0f6 25%, #e4e6ef 50%, #eef0f6 75%);
+  background-size: 200% 100%;
+  animation: bq-shimmer 1.4s infinite;
+  border-radius: 8px 8px 0 0;
+}
+
+.bq-skeleton-row {
+  display: flex;
+  gap: 16px;
+  padding: 20px 24px;
+}
+
+.bq-skeleton-field {
+  flex: 1;
+  height: 60px;
+  background: linear-gradient(90deg, #f0f1f7 25%, #e8e9f2 50%, #f0f1f7 75%);
+  background-size: 200% 100%;
+  animation: bq-shimmer 1.4s infinite;
+  border-radius: 8px;
+}
+
+@keyframes bq-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
