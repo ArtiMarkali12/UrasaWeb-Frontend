@@ -155,7 +155,7 @@ const AcademicEdu = () => {
       <header className="pe-header">
         <h1 className="pe-title">Academic &amp; Educational</h1>
         <p className="pe-desc pe-desc--short">
-          Our Academic &amp; Educational category offers end-to-end manufacturing for booklets that demand to be noticed.
+          Our Academic  &amp; Educational category offers end-to-end manufacturing for booklets that demand to be noticed.
         </p>
         <p className="pe-desc pe-desc--long">
           From custom dimensions that break standard formats to specialized cover effects and premium paper textures,
