@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Alexandria', sans-serif;
+}
+
+.coffe-container {
+  padding: 60px 8%;
+  background: #f5f6fa;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  font-size: 14px;
+  color: #8a8a8a;
+  margin-bottom: 10px;
+}
+
+.breadcrumb span {
+  color: #1a1adb;
+  font-weight: 500;
+}
+
+/* Title */
+.title {
+  font-size: 42px;
+  font-weight: 700;
+  color: #1a1adb;
+  margin-bottom: 15px;
+}
+
+/* Description */
+.description {
+  max-width: 900px;
+  font-size: 16px;
+  color: #444;
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+/* OUTER CARD */
+.booklet-card {
+  background: #eef0f6;
+  padding: 30px;
+  border-radius: 12px;
+  position: relative;
+  overflow: visible;
+}
+
+/* INNER WHITE CARD */
+.image-wrapper {
+  background: #fff;
+  border-radius: 12px;
+  padding: 60px 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+/* IMAGE */
+.image-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.book-image {
+  width: 300px;
+  max-width: 100%;
+
+  transform: perspective(1000px) rotateY(-18deg);
+
+  /* SHADOW FIXED */
+  filter: drop-shadow(0 35px 45px rgba(0, 0, 0, 0.25));
+}
+
+/* DETAILS */
+.details-section {
+  text-align: left;
+}
+
+.details-section h4 {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 5px;
+}
+
+.details-section p {
+  font-size: 16px;
+  color: #222;
+  margin-bottom: 20px;
+}
+
+/* PAGINATION */
+.pagination {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pagination span {
+  margin: 0 8px;
+  font-size: 14px;
+  color: #bbb;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.pagination span:hover {
+  color: #1a1adb;
+}
+
+.pagination .active {
+  color: #1a1adb;
+  font-weight: 700;
+  transform: scale(1.2);
+}
+
+/* ANIMATION */
+.fade {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) rotateY(-10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateY(-18deg);
+  }
+}
+
+/* ========================= */
+/* 🔥 RESPONSIVE DESIGN */
+/* ========================= */
+
+/* Ultra Small */
+@media (max-width: 480px) {
+  .title {
+    font-size: 28px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+
+  .image-wrapper {
+    flex-direction: column;
+    padding: 25px 15px;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .book-image {
+    width: 180px;
+  }
+
+  .details-section {
+    text-align: center;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .image-wrapper {
+    flex-direction: column;
+    padding: 30px 20px;
+    gap: 20px;
+  }
+
+  .book-image {
+    width: 220px;
+  }
+
+  .details-section {
+    text-align: center;
+  }
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .book-image {
+    width: 250px;
+  }
+
+  .image-wrapper {
+    gap: 40px;
+  }
+}
+
+/* Medium Screens */
+@media (max-width: 1440px) {
+  .book-image {
+    width: 280px;
+  }
+}
+
+/* Large Screens */
+@media (min-width: 1441px) {
+  .title {
+    font-size: 48px;
+  }
+
+  .image-wrapper {
+    padding: 80px;
+  }
+
+  .book-image {
+    width: 340px;
+  }
+}
+
+/* Ultra Large */
+@media (min-width: 1800px) {
+  .coffe-container {
+    padding: 80px 12%;
+  }
+
+  .title {
+    font-size: 56px;
+  }
+
+  .description {
+    font-size: 18px;
+  }
+
+  .book-image {
+    width: 380px;
+  }
+}
