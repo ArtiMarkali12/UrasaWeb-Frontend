@@ -603,33 +603,18 @@ const BookletQuote = () => {
             <span className="bq-no-opts">No fields configured yet.</span>
           ) : (
             <>
-              {/* Render category as direct field if no subcategories */}
-              {hasDirectField &&
-                renderField(categoryKey, categoryKey, {
-                  displayName: category.displayName || categoryKey,
-                  fieldType: category.fieldType,
-                  placeholder: category.placeholder,
-                  required: category.required,
-                  attributes: directAttributes,
-                })}
-
-              {/* Render subcategory fields */}
-              {subEntries.length > 0 && (
-                <div className={`bq-row bq-row-${colCount}`}>
-                  {subEntries.map(([subKey, subcat]) =>
-                    renderField(categoryKey, subKey, subcat),
-                  )}
-                </div>
-              )}
-
-              {/* Render direct attributes as multi-check if any */}
+              {/* Render direct attributes as multi-check if any - SHOW FIRST */}
               {directAttributes.length > 0 && !hasDirectField && (
                 <div
                   className="bq-field bq-field-full"
-                  style={{ marginTop: subEntries.length > 0 ? "16px" : "0" }}
+                  style={{ marginBottom: subEntries.length > 0 ? "20px" : "0" }}
                 >
                   <label className="bq-label">
                     {category.displayName || categoryKey}
+                    <span className="bq-optional">
+                      {" "}
+                      (Select all that apply)
+                    </span>
                   </label>
                   <div className="bq-multiselect-wrap">
                     {directAttributes.map((opt) => (
@@ -647,6 +632,25 @@ const BookletQuote = () => {
                   </div>
                 </div>
               )}
+
+              {/* Render subcategory fields - SHOW AFTER direct attributes */}
+              {subEntries.length > 0 && (
+                <div className={`bq-row bq-row-${colCount}`}>
+                  {subEntries.map(([subKey, subcat]) =>
+                    renderField(categoryKey, subKey, subcat),
+                  )}
+                </div>
+              )}
+
+              {/* Render category as direct field if no subcategories (and no direct attributes) */}
+              {hasDirectField &&
+                renderField(categoryKey, categoryKey, {
+                  displayName: category.displayName || categoryKey,
+                  fieldType: category.fieldType,
+                  placeholder: category.placeholder,
+                  required: category.required,
+                  attributes: directAttributes,
+                })}
             </>
           )}
         </div>
