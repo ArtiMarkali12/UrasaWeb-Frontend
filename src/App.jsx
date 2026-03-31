@@ -48,6 +48,9 @@ import PremiumPackaging from "./components/Services/PremiumPackaging";
 import SaddleBooklet from "./components/Services/SaddleBooklet";
 import CoffeTable from "./components/Services/CoffeTable";
 import PerfectBooklet from "./components/Services/PerfectBooklet";
+import CorporateIde from "./components/Services/CorporateIde";
+import SpecialityCards from "./components/Services/SpecialityCards";
+import MarketingCollateral from "./components/Services/MarketingCollateral";
 
 const App = () => {
   return (
@@ -60,6 +63,9 @@ const App = () => {
         <Route path="/services/publish-editorial" element={<PublishEditorial />} />
         <Route path="/services/academic-educational" element={<AcademicEdu />} />
         <Route path="/services/premium-packaging" element={<PremiumPackaging />} />
+        <Route path="/services/corporate-identities" element={<CorporateIde />} />
+        <Route path="/services/specialty-cards" element={<SpecialityCards />} />
+        <Route path="/services/marketing-collateral" element={<MarketingCollateral />} />
 
         <Route path="/services/publish-editorial/saddle-booklet" element={<SaddleBooklet />} />
         <Route path="/services/publish-editorial/coffee-table-book" element={<CoffeTable />} />
