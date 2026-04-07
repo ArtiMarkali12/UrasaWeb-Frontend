@@ -42,7 +42,7 @@ const PRODUCTS = [
   },
   {
     id: "hard-cover-booklet",
-    label: "Hard Cover Booklet",
+    label: "Hard Cover Booklet .",
     path: "/services/publish-editorial/hard-cover-booklet",
     image: hardimg,
     description: "Hardcover booklets feature a rigid board cover wrapped in paper or cloth, offering maximum durability and a premium presentation.",
