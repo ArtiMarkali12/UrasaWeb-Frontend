@@ -51,6 +51,7 @@ import PerfectBooklet from "./components/Services/PerfectBooklet";
 import CorporateIde from "./components/Services/CorporateIde";
 import SpecialityCards from "./components/Services/SpecialityCards";
 import MarketingCollateral from "./components/Services/MarketingCollateral";
+import BusinessCard from "./components/Services/BusinessCard";
 
 const App = () => {
   return (
@@ -70,6 +71,7 @@ const App = () => {
         <Route path="/services/publish-editorial/saddle-booklet" element={<SaddleBooklet />} />
         <Route path="/services/publish-editorial/coffee-table-book" element={<CoffeTable />} />
         <Route path="/services/publish-editorial/perfect-bound-booklet" element={<PerfectBooklet />} />
+        <Route path="/services/corporate-identities/business-cards" element={<BusinessCard />} />
 
         {/* Future routes (safe comment)
         <Route path="/services/publish-editorial/spiral-comb-coil-booklet" element={<div>Spiral / Wire-o Booklet Page</div>} />

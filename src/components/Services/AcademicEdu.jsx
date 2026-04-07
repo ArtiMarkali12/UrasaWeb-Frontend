@@ -147,9 +147,9 @@ const AcademicEdu = () => {
         <span className="ae-bc-current">Academic &amp; Educational</span>
       </nav>
 
-      <header className="ae-header">
-        <h1 className="ae-title">Academic &amp; Educational</h1>
-        <p className="ae-desc ae-desc--short">
+      <header className="pe-header">
+        <h1 className="pe-title">Academic &amp; Educational</h1>
+        <p className="pe-desc pe-desc--short">
           Our Academic &amp; Educational category offers end-to-end manufacturing for booklets that demand to be noticed.
         </p>
         <p className="ae-desc ae-desc--long">

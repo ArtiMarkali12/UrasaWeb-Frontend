@@ -842,7 +842,7 @@ html, body { overflow-x: hidden; max-width: 100%; }
    SINGLE CARD (cards 1, 3, 6)
    — 1 image fills wrapper, floats straight UP on hover
    ════════════════════════════════════════════════════════════ */
-.svc-card--single .svc-img-wrap {
+/* .svc-card--single .svc-img-wrap {
   padding: 28px 36px 18px;
 }
 
@@ -852,17 +852,115 @@ html, body { overflow-x: hidden; max-width: 100%; }
   position: relative;
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   transform: translateY(0);
+} */
+
+/* ── SINGLE CARD (cards 1, 3, 6) ── */
+.svc-card--single .svc-img-wrap {
+  padding: 28px 36px 18px;
+  overflow: visible;          /* ← ADD: lets zoomed image breathe */
 }
 
-@media (hover: hover) {
+.sl-solo {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-origin: center bottom;    /* ← ADD: zoom from bottom */
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: scale(1) translateY(0);
+}
+
+/* @media (hover: hover) {
   .svc-card--single:hover .sl-solo {
     transform: translateY(-20px);
   }
 }
 .svc-card--single.svc-touched .sl-solo {
   transform: translateY(-20px);
+} */
+
+
+
+/* Desktop default */
+@media (hover: hover) {
+  .svc-card--single:hover .sl-solo {
+    transform: scale(1.22) translateY(-14px);
+  }
+}
+.svc-card--single.svc-touched .sl-solo {
+  transform: scale(1.22) translateY(-14px);
 }
 
+/* ≥1920px */
+@media (min-width: 1920px) {
+  .svc-card--single:hover .sl-solo {
+    transform: scale(1.26) translateY(-18px);
+  }
+  .svc-card--single.svc-touched .sl-solo {
+    transform: scale(1.26) translateY(-18px);
+  }
+}
+
+/* ≤1023px */
+@media (max-width: 1023px) {
+  .svc-card--single:hover .sl-solo {
+    transform: scale(1.20) translateY(-12px);
+  }
+  .svc-card--single.svc-touched .sl-solo {
+    transform: scale(1.20) translateY(-12px);
+  }
+}
+
+/* ≤899px */
+@media (max-width: 899px) {
+  .svc-card--single:hover .sl-solo {
+    transform: scale(1.18) translateY(-10px);
+  }
+  .svc-card--single.svc-touched .sl-solo {
+    transform: scale(1.18) translateY(-10px);
+  }
+}
+
+/* ≤767px */
+@media (max-width: 767px) {
+  .svc-card--single:hover .sl-solo {
+    transform: scale(1.16) translateY(-9px);
+  }
+  .svc-card--single.svc-touched .sl-solo {
+    transform: scale(1.16) translateY(-9px);
+  }
+}
+
+/* ≤599px */
+@media (max-width: 599px) {
+  .svc-card--single:hover .sl-solo {
+    transform: scale(1.18) translateY(-12px);
+  }
+  .svc-card--single.svc-touched .sl-solo {
+    transform: scale(1.18) translateY(-12px);
+  }
+}
+
+
+
+.svc-card--single {
+  overflow: visible;         /* ← allows zoomed image to escape card bounds */
+  z-index: 0;
+  transition: z-index 0s step-end;
+}
+
+@media (hover: hover) {
+  .svc-card--single:hover {
+    z-index: 10;
+  }
+}
+.svc-card--single.svc-touched {
+  z-index: 10;
+}
+
+.svc-grid {
+  /* existing rules stay, add: */
+  overflow: visible;
+}
 
 /* ════════════════════════════════════════════════════════════
    DUAL CARD (cards 2, 4)
@@ -1003,7 +1101,7 @@ html, body { overflow-x: hidden; max-width: 100%; }
 /* Rest state: envelope  */
 /* translateY(100%) =  */
 .sl-tc {
-  width: 25%;
+  width: 30%;
   bottom: 8%;          
   left: 50%;
   transform: translateX(-50%) translateY(100%);  /**/
@@ -1706,7 +1804,8 @@ html, body { overflow-x: hidden; max-width: 100%; }
 .qs-partner-img {
   width: 100%;
   max-width: 160px;
-  height: 64px;
+  /* height: 64px; */
+  height: 90px;
   object-fit: contain;
   display: block;
 }
@@ -1725,7 +1824,7 @@ html, body { overflow-x: hidden; max-width: 100%; }
   .qs-feat-card     { padding: 36px 28px 28px; }
   .qs-feat-img-wrap { width: 110px; height: 110px; }
   .qs-feat-title    { font-size: 1.05rem; }
-  .qs-partner-img   { max-width: 180px; height: 72px; }
+  .qs-partner-img   { max-width: 180px; height: 100px; }
   .qs-partners-grid { gap: 20px 16px; }
 }
 
@@ -1742,7 +1841,7 @@ html, body { overflow-x: hidden; max-width: 100%; }
   .qs-feat-card { padding: 24px 18px 20px; }
   .qs-feat-img-wrap { width: 76px; height: 76px; }
   .qs-feat-title { font-size: 0.88rem; }
-  .qs-partner-img { max-width: 130px; height: 54px; }
+  .qs-partner-img { max-width: 130px; height: 76px; }
 }
 
 /* Tablet Large 900–1023px */
@@ -1759,7 +1858,7 @@ html, body { overflow-x: hidden; max-width: 100%; }
   .qs-feat-img-wrap { width: 64px; height: 64px; }
   .qs-feat-title { font-size: 0.82rem; }
   .qs-partners-grid { grid-template-columns: repeat(4, 1fr); gap: 12px 8px; }
-  .qs-partner-img { max-width: 110px; height: 46px; }
+  .qs-partner-img { max-width: 110px; height: 66px; }
 }
 
 /* Tablet 768–899px — stack vertically */
@@ -1778,7 +1877,7 @@ html, body { overflow-x: hidden; max-width: 100%; }
   .qs-title { font-size: 2.6rem; }
   .qs-desc  { font-size: 0.9rem; }
   .qs-partners-grid { grid-template-columns: repeat(4, 1fr); }
-  .qs-partner-img { max-width: 140px; height: 58px; }
+  .qs-partner-img { max-width: 140px; height: 82px; }
 }
 
 /* Large Mobile 600–767px */
@@ -1792,7 +1891,7 @@ html, body { overflow-x: hidden; max-width: 100%; }
   .qs-title { font-size: 2.2rem; }
   .qs-desc  { font-size: 0.86rem; }
   .qs-partners-grid { grid-template-columns: repeat(4, 1fr); gap: 10px 6px; }
-  .qs-partner-img { max-width: 110px; height: 48px; }
+  .qs-partner-img { max-width: 110px; height: 70px; }
 }
 
 /* Mobile 360–599px */
@@ -1807,7 +1906,7 @@ html, body { overflow-x: hidden; max-width: 100%; }
   .qs-title { font-size: 1.9rem; }
   .qs-desc  { font-size: 0.84rem; line-height: 1.7; }
   .qs-partners-grid { grid-template-columns: repeat(2, 1fr); gap: 14px 10px; }
-  .qs-partner-img { max-width: 150px; height: 60px; }
+  .qs-partner-img { max-width: 150px; height: 80px; }
   .qs-partners-label { font-size: 0.9rem; }
 }
 
@@ -1819,14 +1918,14 @@ html, body { overflow-x: hidden; max-width: 100%; }
   .qs-feat-title { font-size: 0.76rem; }
   .qs-title { font-size: 1.7rem; }
   .qs-desc  { font-size: 0.80rem; }
-  .qs-partner-img { max-width: 120px; height: 50px; }
+  .qs-partner-img { max-width: 120px; height: 68px; }
 }
 
 /* Ultra Small < 320px */
 @media (max-width: 319px) {
   .qs-section { padding: 28px 0; }
   .qs-inner   { padding: 0 10px; }
-  .qs-feat-img-wrap { width: 44px; height: 44px; }
+  .qs-feat-img-wrap { width: 44px; height: 56px; }
   .qs-feat-title { font-size: 0.72rem; }
   .qs-title { font-size: 1.5rem; }
   .qs-desc  { font-size: 0.74rem; }

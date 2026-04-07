@@ -618,7 +618,6 @@ const Navbar = () => {
               )}
             </ul>
           </nav>
-
           <div className="ua-mobile-cta">
             <NavLink to="/contact" className="ua-btn-quote" onClick={closeMobile}>
               <QuoteIcon />

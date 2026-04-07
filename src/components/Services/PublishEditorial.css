@@ -112,20 +112,24 @@
   justify-content: center;
   text-decoration: none;
   overflow: hidden;
-  padding: 1.25rem;
+  /* padding: 1.25rem; */
+  padding: 0.75rem;
   box-sizing: border-box;
   /* ensure image area always fills the visual card height */
   min-height: calc(var(--card-h) - var(--card-label-h));
 }
 .pe-card-img {
-  max-width: 100%;
-  max-height: 180px;
+  /* max-width: 100%; */
+max-width: 90%;
+  /* max-height: 180px; */
+  max-height: 210px;
   object-fit: contain;
   display: block;
   transition: transform var(--pe-ease);
 }
 .pe-card--open .pe-card-img {
-  transform: scale(0.95);
+  /* transform: scale(0.95); */
+transform: scale(0.88);
 }
 
 /* ── Info column ── */
@@ -279,4 +283,61 @@
   .pe-card-desc,
   .pe-card-tip  { font-size: 0.68rem; }
   .pe-title { font-size: 1.45rem; }
+}
+
+
+/* ── Ultra large ≥ 1920px ── */
+@media (min-width: 1920px) {
+  .pe-card-img { max-height: 230px; }   /* was 200px */
+}
+
+/* ── Medium desktop 1024–1439px ── */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .pe-card-img { max-height: 185px; }   /* was 160px */
+  .pe-card-left { padding: 0.6rem; }
+}
+
+/* ── Small laptop / large tablet landscape 768–1023px ── */
+@media (max-width: 1023px) {
+  .pe-card-img { max-height: 155px; }   /* was 140px */
+  .pe-card-left { padding: 0.6rem; }
+}
+
+/* ── Tablet portrait 600–767px ── */
+@media (max-width: 767px) {
+  .pe-card-img { max-height: 130px; }   /* was 120px — slight bump */
+  .pe-card-left { padding: 0.5rem; }
+}
+/* Add this rule inside the 767px block for open state shrink on mobile */
+@media (max-width: 767px) {
+  .pe-card--open .pe-card-img {
+    transform: scale(0.82);             /* ← more shrink on smaller screens */
+  }
+}
+
+/* ── Mobile landscape 480–599px ── */
+@media (max-width: 599px) and (min-width: 481px) {
+  .pe-card-img { max-height: 115px; }   /* was 110px */
+  .pe-card-left { padding: 0.45rem; }
+  .pe-card--open .pe-card-img {
+    transform: scale(0.80);
+  }
+}
+
+/* ── Mobile portrait ≤ 480px ── */
+@media (max-width: 480px) {
+  .pe-card-img { max-height: 155px; }   /* was 140px */
+  .pe-card-left { padding: 0.75rem; }
+  .pe-card--open .pe-card-img {
+    transform: scale(0.85);
+  }
+}
+
+/* ── Ultra small ≤ 360px ── */
+@media (max-width: 360px) {
+  .pe-card-img { max-height: 130px; }
+  .pe-card-left { padding: 0.5rem; }
+  .pe-card--open .pe-card-img {
+    transform: scale(0.80);
+  }
 }
