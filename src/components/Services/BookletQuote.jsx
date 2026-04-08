@@ -779,31 +779,38 @@ const BookletQuote = () => {
     }
 
     /* DEFAULT — SELECT DROPDOWN with attributes from backend */
+    // /////////////////////////////////////////////////////////////////////////////////////////////////////
     return (
       <div key={subcategoryKey} className="bq-field">
+        <h1>Test</h1>
         <label className="bq-label">
           {label}
           {required && <span className="bq-req"> *</span>}
         </label>
         <div className="bq-select-wrap">
           <select
-            className="bq-select"
+            className="form-control p-2 bg-danger"
             value={value}
             onChange={(e) => handleChange(subcategoryKey, e.target.value)}
             disabled={attributes.length === 0}
           >
-            <option value="">
+            <option
+              value=""
+            >
               {attributes.length === 0
                 ? "No options available"
                 : `Select ${label}`}
             </option>
             {attributes.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
+              <option
+                key={opt}
+                value={opt}
+              >
+                <div>{opt}</div>
               </option>
             ))}
           </select>
-          <span className="bq-select-arrow">▾</span>
+          {/* <span className="bq-select-arrow">▾</span> */}
         </div>
       </div>
     );
@@ -892,6 +899,7 @@ const BookletQuote = () => {
     );
   };
 
+  
   /* ─────────────────────────────────────────
      SUCCESS
   ───────────────────────────────────────── */
