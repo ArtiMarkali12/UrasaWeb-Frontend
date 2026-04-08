@@ -4,6 +4,16 @@ import CountrySelector from "./CountrySelector";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+// ── Size images ──────────────────────────────────────────────────
+import usSize from "../../assets/images/servicesImage/ussize.png";
+import europeSize from "../../assets/images/servicesImage/Europe.png";
+import japanSize from "../../assets/images/servicesImage/japan.png";
+import squareSize from "../../assets/images/servicesImage/square.png";
+import circleSize from "../../assets/images/servicesImage/circle.png";
+import foldedCard from "../../assets/images/servicesImage/square.png";
+import miniCard from "../../assets/images/servicesImage/square.png";
+import customCard from "../../assets/images/servicesImage/square.png";
+
 /* ─────────────────────────────────────────────
    HELPERS
 ───────────────────────────────────────────── */
@@ -13,7 +23,6 @@ const safeObj = (v) =>
 
 /* Determine field type based on backend configuration or fallback to patterns */
 const getFieldTypeInfo = (categoryKey, subcategory) => {
-  // First check if backend provided fieldType
   if (subcategory?.fieldType) {
     return {
       type: subcategory.fieldType,
@@ -22,7 +31,6 @@ const getFieldTypeInfo = (categoryKey, subcategory) => {
     };
   }
 
-  // Fallback to pattern matching for backward compatibility
   const catKey = categoryKey.toLowerCase();
   const subKey = (
     subcategory?.displayName ||
@@ -30,7 +38,6 @@ const getFieldTypeInfo = (categoryKey, subcategory) => {
     ""
   ).toLowerCase();
 
-  // Customer details
   if (catKey.includes("customer") || catKey.includes("detail")) {
     if (subKey.includes("name"))
       return { type: "text", placeholder: "Enter your name", required: true };
@@ -50,16 +57,12 @@ const getFieldTypeInfo = (categoryKey, subcategory) => {
       };
   }
 
-  // General details
   if (catKey.includes("general")) {
     if (subKey.includes("quantity"))
       return { type: "number", placeholder: "e.g., 500", required: true };
     if (subKey.includes("size")) return { type: "select", required: false };
-    if (subKey.includes("orientation"))
-      return { type: "select", required: false };
   }
 
-  // Cover related
   if (catKey.includes("cover")) {
     if (subKey.includes("flap")) return { type: "boolean", required: false };
     if (subKey.includes("finish")) return { type: "select", required: false };
@@ -67,7 +70,6 @@ const getFieldTypeInfo = (categoryKey, subcategory) => {
       return { type: "select", required: false };
   }
 
-  // Interior
   if (catKey.includes("interior")) {
     if (subKey.includes("page") && subKey.includes("number"))
       return { type: "number", placeholder: "e.g., 48", required: true };
@@ -75,30 +77,24 @@ const getFieldTypeInfo = (categoryKey, subcategory) => {
     if (subKey.includes("grammage") || subKey.includes("weight"))
       return { type: "select", required: false };
     if (subKey.includes("type")) return { type: "select", required: false };
-    if (subKey.includes("finish")) return { type: "select", required: false };
   }
 
-  // Special finishing
   if (catKey.includes("special") || catKey.includes("finishing")) {
     if (subKey.includes("print")) return { type: "checkbox", required: false };
     if (subKey.includes("edge")) return { type: "select", required: false };
   }
 
-  // Additional
   if (catKey.includes("additional") || catKey.includes("note")) {
     return { type: "textarea", required: false };
   }
 
-  // Packaging
   if (catKey.includes("packaging")) {
     return { type: "checkbox", required: false };
   }
 
-  // Default: select dropdown
   return { type: "select", placeholder: "Select option", required: false };
 };
 
-/* Check if field is required */
 const isRequired = (categoryKey, subcategoryKey) => {
   const subKey = subcategoryKey.toLowerCase();
   return (
@@ -110,12 +106,10 @@ const isRequired = (categoryKey, subcategoryKey) => {
   );
 };
 
-/* Build empty form from categories */
 const buildEmptyForm = (categories) => {
   const form = {};
 
   Object.entries(categories).forEach(([catKey, category]) => {
-    // Handle subcategories
     Object.entries(safeObj(category?.subcategories)).forEach(
       ([subKey, subcategory]) => {
         const fieldInfo = getFieldTypeInfo(catKey, subcategory);
@@ -130,7 +124,6 @@ const buildEmptyForm = (categories) => {
       },
     );
 
-    // Handle direct field type (for categories without subcategories like "Additional Notes")
     const hasDirectField =
       category?.fieldType &&
       Object.keys(safeObj(category?.subcategories)).length === 0;
@@ -145,7 +138,6 @@ const buildEmptyForm = (categories) => {
       }
     }
 
-    // Handle direct attributes (for categories like "Special Finishing", "Packaging")
     const directAttributes = safeArr(category?.attributes);
     if (directAttributes.length > 0 && !hasDirectField) {
       form[catKey] = [];
@@ -158,7 +150,7 @@ const buildEmptyForm = (categories) => {
 /* ─────────────────────────────────────────────
    COMPONENT
 ───────────────────────────────────────────── */
-const BookletQuote = () => {
+const BusinessCardQuote = () => {
   const [categories, setCategories] = useState({});
   const [formData, setFormData] = useState({});
   const [customerDetails, setCustomerDetails] = useState({
@@ -182,91 +174,29 @@ const BookletQuote = () => {
 
   // Size options with images
   const sizeOptions = [
-    {
-      label: "S",
-      img: "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=200&h=200&fit=crop",
-      dimensions: "4x6 inches",
-    },
-    {
-      label: "M",
-      img: "https://images.unsplash.com/photo-1544816155-12df9643f363?w=200&h=200&fit=crop",
-      dimensions: "5x7 inches",
-    },
-    {
-      label: "L",
-      img: "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=200&h=200&fit=crop",
-      dimensions: "6x9 inches",
-    },
-    {
-      label: "XL",
-      img: "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=200&h=200&fit=crop",
-      dimensions: "8x10 inches",
-    },
-    {
-      label: "XXL",
-      img: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=200&h=200&fit=crop",
-      dimensions: "8.5x11 inches",
-    },
-    {
-      label: "A5",
-      img: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=200&h=200&fit=crop",
-      dimensions: "5.8x8.3 inches",
-    },
-    {
-      label: "A4",
-      img: "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=200&h=200&fit=crop",
-      dimensions: "8.3x11.7 inches",
-    },
-    {
-      label: "Square",
-      img: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=200&h=200&fit=crop",
-      dimensions: "8x8 inches",
-    },
-    {
-      label: "Landscape",
-      img: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=200&h=200&fit=crop",
-      dimensions: "11x8.5 inches",
-    },
-    {
-      label: "Square1",
-      img: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=200&h=200&fit=crop",
-      dimensions: "8x8 inches",
-    },
-    {
-      label: "Landscape2",
-      img: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=200&h=200&fit=crop",
-      dimensions: "11x8.5 inches",
-    },
-    {
-      label: "Custom",
-      img: "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?w=200&h=200&fit=crop",
-      dimensions: "Your size",
-    },
+    { label: "US Size", img: usSize, dimensions: '3.5" X 2"' },
+    { label: "Europe Size", img: europeSize, dimensions: '3.35" X 2.17"' },
+    { label: "Japan Size", img: japanSize, dimensions: '3.58" X 2.17"' },
+    { label: "Square", img: squareSize, dimensions: '2.5" X 2.5"' },
+    { label: "Circle", img: circleSize, dimensions: '2.5" X 2.5"' },
+    { label: "Folded Card", img: foldedCard, dimensions: '3.5" X 4"' },
+    { label: "Mini Card", img: miniCard, dimensions: '3.5" X 1"' },
+    { label: "Custom", img: customCard, dimensions: "Your size" },
   ];
 
   // Carousel navigation
   const itemsToShow = 5;
   const maxIndex = Math.max(0, sizeOptions.length - itemsToShow);
 
-  const nextSlide = () => {
+  const nextSlide = () =>
     setCarouselIndex((prev) => Math.min(prev + 1, maxIndex));
-  };
-
-  const prevSlide = () => {
-    setCarouselIndex((prev) => Math.max(prev - 1, 0));
-  };
-
-  const visibleSizes = sizeOptions.slice(
-    carouselIndex,
-    carouselIndex + itemsToShow,
-  );
+  const prevSlide = () => setCarouselIndex((prev) => Math.max(prev - 1, 0));
 
   // Mouse drag state
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
-  // Mouse drag handlers
   const handleMouseDown = (e) => {
     setIsDragging(true);
     setStartX(e.pageX);
@@ -287,15 +217,9 @@ const BookletQuote = () => {
     }
   };
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
+  const handleMouseUp = () => setIsDragging(false);
+  const handleMouseLeave = () => setIsDragging(false);
 
-  const handleMouseLeave = () => {
-    setIsDragging(false);
-  };
-
-  // Touch handlers for mobile
   const handleTouchStart = (e) => {
     setStartX(e.touches[0].pageX);
     setScrollLeft(carouselIndex);
@@ -316,7 +240,7 @@ const BookletQuote = () => {
   /* ── fetch options ── */
   const fetchOptions = useCallback(() => {
     setFetching(true);
-    fetch(`${API_BASE_URL}/api/booklet-quote/options`)
+    fetch(`${API_BASE_URL}/api/business-card/options`)
       .then((r) => r.json())
       .then((data) => {
         if (data.success) {
@@ -336,7 +260,7 @@ const BookletQuote = () => {
     fetchOptions();
   }, [fetchOptions]);
 
-  // Auto-generate order date when name and email are filled
+  // Auto-generate order date
   useEffect(() => {
     if (
       customerDetails.name &&
@@ -364,17 +288,6 @@ const BookletQuote = () => {
     }
   };
 
-  const handleSizeSubmit = () => {
-    const finalSize = selectedSize === "Custom" ? customSize : selectedSize;
-
-    if (!finalSize) {
-      alert("Please select or enter a size");
-      return;
-    }
-
-    // Size is saved - continue with form
-  };
-
   const handleMultiCheck = (subKey, value) => {
     setFormData((prev) => {
       const cur = safeArr(prev[subKey]);
@@ -390,12 +303,8 @@ const BookletQuote = () => {
   /* ── validation ── */
   const isFormValid = useCallback(() => {
     if (Object.keys(categories).length === 0) return false;
-
-    // Validate customer details (name and email required, country optional)
     if (!customerDetails.name || !customerDetails.name.trim()) return false;
     if (!customerDetails.email || !customerDetails.email.trim()) return false;
-
-    // Validate size selection
     if (!selectedSize) return false;
     if (selectedSize === "Custom") {
       if (!customWidth || !customHeight) return false;
@@ -423,145 +332,108 @@ const BookletQuote = () => {
 
   /* ── build POST payload ── */
   const buildPayload = () => {
-    // Find the selected size object to get dimensions
     const selectedSizeObj = sizeOptions.find((s) => s.label === selectedSize);
 
-    // Build the complete size string for backend - always include inches
-    let finalBookSize = "";
-    let widthValue = "";
-    let heightValue = "";
-
+    let finalCardSize = "";
     if (selectedSize === "Custom") {
-      widthValue = customWidth || "";
-      heightValue = customHeight || "";
-      finalBookSize = `Custom (${widthValue} x ${heightValue} inches)`;
+      finalCardSize = `Custom (${customWidth || ""} x ${customHeight || ""} inches)`;
     } else if (selectedSizeObj) {
-      // Extract dimensions from the size object (e.g., "5x7 inches" -> width: "5", height: "7")
-      const dims = selectedSizeObj.dimensions.split(" ")[0].split("x");
-      widthValue = dims[0] || "";
-      heightValue = dims[1] || "";
-      finalBookSize = `${selectedSize} (${selectedSizeObj.dimensions})`;
+      finalCardSize = `${selectedSize} (${selectedSizeObj.dimensions})`;
     }
 
-    console.log("📦 Building payload with size data:", {
-      selectedSize,
-      widthInches: widthValue,
-      heightInches: heightValue,
-      bookSize: finalBookSize,
-    });
-
+    // Build the payload matching backend validator structure
     const payload = {
-      // Required fields for backend validation
-      bookSize: finalBookSize,
-      quantity: formData["quantity"] || "1", // Default to 1 if not filled yet
+      // Required: basicsAndDimensions
+      basicsAndDimensions: {
+        projectName: customerDetails.name || "Business Card",
+        quantity: formData["quantity"] || "500",
+        numberOfDifferentNames: formData["numberOfDifferentNames"] || "1",
+        cardSize: finalCardSize || 'US Size (3.5" X 2")',
+        orientation: formData["orientation"] || "portrait",
+      },
 
+      // Required: paperAndMaterial
+      paperAndMaterial: {
+        paperStock:
+          formData["paperStock"] || formData["paperType"] || "Standard",
+        printingSides:
+          formData["printingSides"] ||
+          formData["printingSide"] ||
+          "Single Side",
+      },
+
+      // Required: customerDetails
       customerDetails: {
         name: customerDetails.name || "",
         email: customerDetails.email || "",
+        phone: formData["phone"] || "N/A",
         country: customerDetails.country || "",
-        phone: "",
-        address: "",
       },
+
+      // Timeline
       timeline: {
         orderDate: orderDate || new Date().toISOString().split("T")[0],
         expectedDate: expectedDate || "",
       },
 
-      // Additional size details for admin panel display
+      // Size specifications for admin display
       sizeSpecifications: {
         selectedSize: selectedSize || "",
-        widthInches: widthValue,
-        heightInches: heightValue,
         additionalInfo: sizeText || "",
       },
     };
 
+    // Map any additional form fields from backend categories
     Object.entries(categories).forEach(([catKey, category]) => {
       Object.entries(safeObj(category?.subcategories)).forEach(
         ([subKey, subcategory]) => {
           const value = formData[subKey];
           const subKeyLower = subKey.toLowerCase();
 
-          // Map to appropriate structure
           if (subKeyLower.includes("quantity")) {
-            payload.quantity = value;
-          } else if (subKeyLower.includes("size")) {
-            // Skip - we already set bookSize from our size selector
-            // Only override if user manually entered a different size field
-            if (!selectedSize) {
-              payload.bookSize = value;
-            }
+            payload.basicsAndDimensions.quantity = value;
+          } else if (
+            subKeyLower.includes("card") &&
+            subKeyLower.includes("size")
+          ) {
+            payload.basicsAndDimensions.cardSize = value;
           } else if (subKeyLower.includes("orientation")) {
-            // Only set orientation if it has a valid value, convert to lowercase
-            if (value && value !== "") {
-              payload.orientation = value.toLowerCase();
-            }
+            payload.basicsAndDimensions.orientation = value.toLowerCase();
           } else if (
-            subKeyLower.includes("binding") &&
-            subKeyLower.includes("type")
+            subKeyLower.includes("paper") &&
+            subKeyLower.includes("stock")
           ) {
-            payload.bindingStyle = payload.bindingStyle || {};
-            payload.bindingStyle.bindingType = value;
-          } else if (
-            subKeyLower.includes("cover") &&
-            subKeyLower.includes("style")
-          ) {
-            payload.bindingStyle = payload.bindingStyle || {};
-            payload.bindingStyle.coverStyle = value;
-          } else if (subKeyLower.includes("flap")) {
-            payload.bindingStyle = payload.bindingStyle || {};
-            // Send as boolean true/false from checkbox
-            payload.bindingStyle.coverFlaps = !!value;
-          } else if (
-            subKeyLower.includes("page") &&
-            subKeyLower.includes("number")
-          ) {
-            payload.interiorSpecifications =
-              payload.interiorSpecifications || {};
-            payload.interiorSpecifications.numberOfPages = value;
-          } else if (subKeyLower.includes("color")) {
-            payload.interiorSpecifications =
-              payload.interiorSpecifications || {};
-            payload.interiorSpecifications.printColor = value;
-          } else if (
-            subKeyLower.includes("weight") ||
-            subKeyLower.includes("grammage")
-          ) {
-            payload.interiorSpecifications =
-              payload.interiorSpecifications || {};
-            payload.interiorSpecifications.paperWeight = value;
-          } else if (
-            subKeyLower.includes("type") &&
-            !subKeyLower.includes("binding")
-          ) {
-            payload.interiorSpecifications =
-              payload.interiorSpecifications || {};
-            payload.interiorSpecifications.paperType = value;
-          } else if (
-            subKeyLower.includes("finish") &&
-            !subKeyLower.includes("print")
-          ) {
-            payload.interiorSpecifications =
-              payload.interiorSpecifications || {};
-            payload.interiorSpecifications.coverFinish = value;
+            payload.paperAndMaterial.paperStock = value;
           } else if (
             subKeyLower.includes("print") &&
-            subKeyLower.includes("finishing")
+            subKeyLower.includes("side")
           ) {
-            payload.specialFinishing = payload.specialFinishing || {};
-            payload.specialFinishing.printFinishing = safeArr(value);
+            payload.paperAndMaterial.printingSides = value;
           } else if (
-            subKeyLower.includes("finishing") &&
-            !subKeyLower.includes("cover")
+            subKeyLower.includes("special") &&
+            subKeyLower.includes("effect")
           ) {
-            // Fallback for "Special Finishing" category
-            payload.specialFinishing = payload.specialFinishing || {};
-            payload.specialFinishing.printFinishing = safeArr(value);
-          } else if (subKeyLower.includes("edge")) {
-            payload.specialFinishing = payload.specialFinishing || {};
-            payload.specialFinishing.pageEdges = value;
-          } else if (subKeyLower.includes("packaging")) {
-            payload.packaging = value;
+            payload.specialEffects = safeArr(value);
+          } else if (subKeyLower.includes("lamination")) {
+            payload.laminationAndCoating = payload.laminationAndCoating || {};
+            payload.laminationAndCoating.type = value;
+          } else if (
+            subKeyLower.includes("corner") &&
+            subKeyLower.includes("type")
+          ) {
+            payload.cornerStyle = payload.cornerStyle || {};
+            payload.cornerStyle.type = value;
+          } else if (
+            subKeyLower.includes("corner") &&
+            subKeyLower.includes("color")
+          ) {
+            payload.cornerStyle = payload.cornerStyle || {};
+            payload.cornerStyle.color = value;
+          } else if (subKeyLower.includes("foil")) {
+            payload.laminationAndCoating = payload.laminationAndCoating || {};
+            payload.laminationAndCoating.premiumFinishes =
+              payload.laminationAndCoating.premiumFinishes || {};
+            payload.laminationAndCoating.premiumFinishes.foilColor = value;
           } else if (
             subKeyLower.includes("note") ||
             subKeyLower.includes("additional")
@@ -573,8 +445,6 @@ const BookletQuote = () => {
             payload.customerDetails.email = value;
           } else if (subKeyLower.includes("phone")) {
             payload.customerDetails.phone = value;
-          } else if (subKeyLower.includes("address")) {
-            payload.customerDetails.address = value;
           }
         },
       );
@@ -596,7 +466,7 @@ const BookletQuote = () => {
         JSON.stringify(payload, null, 2),
       );
 
-      const res = await fetch(`${API_BASE_URL}/api/booklet-quote`, {
+      const res = await fetch(`${API_BASE_URL}/api/business-card`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -606,7 +476,6 @@ const BookletQuote = () => {
       if (data.success) {
         setSubmitted(true);
         setFormData(buildEmptyForm(categories));
-        // Reset size selector
         setSelectedSize("");
         setCustomWidth("");
         setCustomHeight("");
@@ -623,7 +492,7 @@ const BookletQuote = () => {
   };
 
   /* ─────────────────────────────────────────
-     FIELD RENDERER - Shows subcategory as label, attributes as dropdown options
+     FIELD RENDERER
   ───────────────────────────────────────── */
   const renderField = (categoryKey, subcategoryKey, subcategory) => {
     const label = subcategory.displayName || subcategoryKey;
@@ -633,7 +502,6 @@ const BookletQuote = () => {
     const required =
       fieldInfo.required || isRequired(categoryKey, subcategoryKey);
 
-    /* TEXTAREA */
     if (fieldInfo.type === "textarea") {
       return (
         <div key={subcategoryKey} className="bq-field bq-field-full">
@@ -658,7 +526,6 @@ const BookletQuote = () => {
       );
     }
 
-    /* CHECKBOX (for multiple options like special finishing, packaging) */
     if (fieldInfo.type === "checkbox") {
       return (
         <div key={subcategoryKey} className="bq-field bq-field-full">
@@ -683,7 +550,6 @@ const BookletQuote = () => {
       );
     }
 
-    /* RADIO BUTTONS (for single selection from multiple options) */
     if (fieldInfo.type === "radio") {
       return (
         <div key={subcategoryKey} className="bq-field bq-field-full">
@@ -715,7 +581,6 @@ const BookletQuote = () => {
       );
     }
 
-    /* BOOLEAN - Checkbox (like "I agree" checkbox) */
     if (fieldInfo.type === "boolean") {
       return (
         <div
@@ -738,7 +603,6 @@ const BookletQuote = () => {
       );
     }
 
-    /* NUMBER */
     if (fieldInfo.type === "number") {
       return (
         <div key={subcategoryKey} className="bq-field">
@@ -758,14 +622,12 @@ const BookletQuote = () => {
       );
     }
 
-    /* TEXT / EMAIL / TEL */
     if (["text", "email", "tel"].includes(fieldInfo.type)) {
       return (
         <div key={subcategoryKey} className="bq-field">
           <label className="bq-label">
             {label}
             {required && <span className="bq-req"> *</span>}
-            {!required && <span className="bq-optional"> (Optional)</span>}
           </label>
           <input
             className="bq-input"
@@ -778,7 +640,6 @@ const BookletQuote = () => {
       );
     }
 
-    /* DEFAULT — SELECT DROPDOWN with attributes from backend */
     return (
       <div key={subcategoryKey} className="bq-field">
         <label className="bq-label">
@@ -810,15 +671,12 @@ const BookletQuote = () => {
   };
 
   /* ─────────────────────────────────────────
-     STEP RENDERER - Categories as steps, subcategories as fields
+     STEP RENDERER
   ───────────────────────────────────────── */
   const renderStep = (categoryKey, category, stepIndex) => {
     const subcategories = safeObj(category?.subcategories);
     const subEntries = Object.entries(subcategories);
     const directAttributes = safeArr(category?.attributes);
-    const colCount = Math.min(Math.max(subEntries.length, 1), 4);
-
-    // Check if category has no subcategories but has field type configured
     const hasDirectField = subEntries.length === 0 && category?.fieldType;
 
     return (
@@ -837,7 +695,6 @@ const BookletQuote = () => {
             <span className="bq-no-opts">No fields configured yet.</span>
           ) : (
             <>
-              {/* Render direct attributes as multi-check if any - SHOW FIRST */}
               {directAttributes.length > 0 && !hasDirectField && (
                 <div
                   className="bq-field bq-field-full"
@@ -867,16 +724,14 @@ const BookletQuote = () => {
                 </div>
               )}
 
-              {/* Render subcategory fields - SHOW AFTER direct attributes */}
               {subEntries.length > 0 && (
-                <div className={`bq-row bq-row-${colCount}`}>
+                <div className="bq-row bq-row-4">
                   {subEntries.map(([subKey, subcat]) =>
                     renderField(categoryKey, subKey, subcat),
                   )}
                 </div>
               )}
 
-              {/* Render category as direct field if no subcategories (and no direct attributes) */}
               {hasDirectField &&
                 renderField(categoryKey, categoryKey, {
                   displayName: category.displayName || categoryKey,
@@ -901,7 +756,7 @@ const BookletQuote = () => {
         <div className="bq-success-card">
           <div className="bq-success-icon">✓</div>
           <h2>Quote Submitted!</h2>
-          <p>We'll get back to you shortly with your booklet quote.</p>
+          <p>We'll get back to you shortly with your business card quote.</p>
           <button
             className="bq-restart-btn"
             onClick={() => {
@@ -952,7 +807,7 @@ const BookletQuote = () => {
         your quote!
       </p>
 
-      {/* Customer Information Section - Static */}
+      {/* Customer Information Section */}
       <div className="bq-step">
         <div className="bq-step-header">
           <span className="bq-step-number">1.</span>
@@ -1050,16 +905,14 @@ const BookletQuote = () => {
         </div>
       </div>
 
-      {/* Size Selector Section - After Customer Information */}
+      {/* Size Selector Section */}
       <div className="bq-step">
         <div className="bq-step-header">
           <span className="bq-step-number">2.</span>
           <span className="bq-step-title">Size Selection</span>
         </div>
         <div className="bq-step-body">
-          {/* Size Carousel Container */}
           <div className="bq-carousel-container">
-            {/* Previous Arrow */}
             <button
               className="bq-carousel-arrow bq-carousel-prev"
               onClick={prevSlide}
@@ -1069,7 +922,6 @@ const BookletQuote = () => {
               ‹
             </button>
 
-            {/* Carousel Viewport */}
             <div
               className="bq-carousel-viewport"
               onMouseDown={handleMouseDown}
@@ -1099,7 +951,7 @@ const BookletQuote = () => {
                         <div className="bq-size-img-wrap">
                           <img
                             src={size.img}
-                            alt={`${size.label} size booklet`}
+                            alt={`${size.label} size card`}
                             className="bq-size-img"
                             loading="lazy"
                           />
@@ -1112,14 +964,14 @@ const BookletQuote = () => {
                           >
                             <input
                               type="text"
-                              placeholder="Width (e.g., 5)"
+                              placeholder="W"
                               value={customWidth}
                               onChange={(e) => setCustomWidth(e.target.value)}
                               className="bq-custom-input"
                             />
                             <input
                               type="text"
-                              placeholder="Height (e.g., 7)"
+                              placeholder="H"
                               value={customHeight}
                               onChange={(e) => setCustomHeight(e.target.value)}
                               className="bq-custom-input"
@@ -1137,7 +989,7 @@ const BookletQuote = () => {
                         <div className="bq-size-img-wrap">
                           <img
                             src={size.img}
-                            alt={`${size.label} size booklet`}
+                            alt={`${size.label} size card`}
                             className="bq-size-img"
                             loading="lazy"
                           />
@@ -1151,7 +1003,6 @@ const BookletQuote = () => {
               </div>
             </div>
 
-            {/* Next Arrow */}
             <button
               className="bq-carousel-arrow bq-carousel-next"
               onClick={nextSlide}
@@ -1162,7 +1013,6 @@ const BookletQuote = () => {
             </button>
           </div>
 
-          {/* Carousel Indicators */}
           <div className="bq-carousel-indicators">
             {sizeOptions.map((_, index) => (
               <button
@@ -1181,7 +1031,6 @@ const BookletQuote = () => {
             ))}
           </div>
 
-          {/* Text Input for Additional Size Information */}
           <div className="bq-size-text-input">
             <label className="bq-label">
               Additional Information{" "}
@@ -1198,6 +1047,7 @@ const BookletQuote = () => {
         </div>
       </div>
 
+      {/* Dynamic Categories from Backend */}
       {Object.keys(categories).length === 0 ? (
         <div className="bq-no-data">
           <p>
@@ -1216,9 +1066,7 @@ const BookletQuote = () => {
           <div className="bq-footer">
             <h2 className="bq-allset">You're all set!</h2>
             <button
-              className={`bq-submit-btn ${
-                isFormValid() ? "bq-submit-btn--active" : ""
-              }`}
+              className={`bq-submit-btn ${isFormValid() ? "bq-submit-btn--active" : ""}`}
               onClick={handleSubmit}
               disabled={!isFormValid() || loading}
             >
@@ -1231,4 +1079,4 @@ const BookletQuote = () => {
   );
 };
 
-export default BookletQuote;
+export default BusinessCardQuote;

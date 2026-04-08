@@ -91,21 +91,26 @@
   flex-wrap: wrap;
   gap: 16px;
   align-items: flex-end;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .bq-row-2 > .bq-field {
   flex: 1 1 calc(50% - 8px);
   min-width: 160px;
+  max-width: 100%;
 }
 
 .bq-row-3 > .bq-field {
   flex: 1 1 calc(33.33% - 12px);
   min-width: 150px;
+  max-width: 100%;
 }
 
 .bq-row-4 > .bq-field {
   flex: 1 1 calc(25% - 12px);
   min-width: 140px;
+  max-width: 100%;
 }
 
 .bq-mt {
@@ -170,6 +175,13 @@
 .bq-input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+/* Date input — ensure it stays within container */
+.bq-field input[type="date"] {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* ====================== */
@@ -474,11 +486,12 @@
 }
 
 .bq-size-item-custom.bq-size-item-active {
-  min-width: 220px !important;
-  max-width: 220px;
+  min-width: 110px !important;
+  max-width: 110px;
   padding: 12px;
   overflow: visible;
   z-index: 10;
+  transform: translateY(-2px);
 }
 
 .bq-custom-inputs {
@@ -592,6 +605,60 @@
 .bq-custom-size-input {
   margin-top: 20px;
   animation: bq-fadeIn 0.3s ease;
+}
+
+/* Custom Size Inputs - displayed below carousel when Custom is selected */
+.bq-custom-size-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 16px;
+  background: #f8f8fc;
+  border-radius: 8px;
+  border: 1px dashed #1a1adb;
+  animation: bq-slideDown 0.3s ease;
+}
+
+.bq-custom-input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.bq-custom-input-group .bq-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.bq-custom-input-group .bq-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d8d8ea;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #222;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: "Alexandria", sans-serif;
+}
+
+.bq-custom-input-group .bq-input:focus {
+  border-color: #1a1adb;
+  box-shadow: 0 0 0 2px rgba(26, 26, 219, 0.07);
+}
+
+@keyframes bq-slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .bq-size-text-input {
@@ -902,44 +969,341 @@
 
 /* Ultra small: < 360px */
 @media (max-width: 360px) {
+  html,
+  body {
+    overflow-x: hidden !important;
+  }
   .bq-wrapper {
-    padding: 16px 0 40px;
+    padding: 12px 4px 40px;
+    overflow-x: hidden !important;
+    max-width: 100vw;
+  }
+
+  .bq-intro-text {
+    padding: 0 6px;
+    font-size: 13px;
+    max-width: 100%;
+  }
+
+  .bq-step {
+    margin-bottom: 14px;
+    overflow: visible !important;
+    max-width: calc(100vw - 8px) !important;
+    width: 100% !important;
   }
 
   .bq-step-body {
-    padding: 14px 12px;
+    padding: 10px 6px !important;
+    overflow: visible !important;
+    max-width: 100% !important;
   }
 
   .bq-step-header {
-    padding: 12px 14px;
+    padding: 10px 10px;
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+
+  .bq-step-title {
+    font-size: 14px;
   }
 
   .bq-allset {
-    font-size: 20px;
+    font-size: 18px;
+  }
+
+  .bq-row,
+  .bq-row-2,
+  .bq-row-3,
+  .bq-row-4 {
+    flex-direction: column !important;
+    gap: 10px;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  .bq-row-3 > .bq-field,
+  .bq-row-4 > .bq-field,
+  .bq-row-2 > .bq-field,
+  .bq-row > .bq-field,
+  .bq-field {
+    flex: 0 0 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .bq-input,
+  .bq-select {
+    font-size: 16px !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    padding: 0 36px 0 12px !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .bq-input[type="date"] {
+    font-size: 16px !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    padding: 0 12px !important;
+    width: 100% !important;
+    max-width: calc(100vw - 20px) !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+  }
+
+  /* Prevent native date picker from overflowing */
+  .bq-field {
+    overflow: visible;
+    max-width: calc(100vw - 20px) !important;
+  }
+
+  .bq-field input[type="date"] {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .bq-textarea {
+    font-size: 16px !important;
+    min-height: 80px !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .bq-select-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    position: relative;
+  }
+
+  .bq-select {
+    width: 100% !important;
+    max-width: 100% !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+  }
+
+  .bq-select-arrow {
+    right: 12px;
+    font-size: 14px;
+  }
+
+  .country-selector-input {
+    font-size: 16px !important;
+    min-height: 46px !important;
+    padding: 10px 12px !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .country-selector-flag {
+    width: 18px;
+    height: 13px;
+  }
+
+  .bq-label {
+    font-size: 11px;
+    white-space: normal;
+    word-wrap: break-word;
+  }
+
+  .bq-size-item {
+    min-width: 90px;
+  }
+
+  .bq-carousel-arrow {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+  }
+
+  .bq-success-card {
+    padding: 24px 16px;
+  }
+
+  .bq-footer {
+    padding: 16px 8px;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .bq-submit-btn {
+    width: 100% !important;
+    padding: 14px 16px !important;
+    font-size: 15px !important;
+  }
+
+  .bq-error {
+    margin: 12px 8px;
+    font-size: 13px;
+  }
+}
+
+/* Mobile: 361px – 480px */
+@media (min-width: 361px) and (max-width: 480px) {
+  html,
+  body {
+    overflow-x: hidden !important;
+  }
+  .bq-wrapper {
+    padding: 16px 6px 50px;
+    overflow-x: hidden !important;
+    max-width: 100vw;
+  }
+
+  .bq-intro-text {
+    padding: 0 10px;
+    max-width: 100%;
+  }
+
+  .bq-step {
+    margin-bottom: 16px;
+    overflow: visible !important;
+    max-width: calc(100vw - 12px) !important;
+    width: 100% !important;
+  }
+
+  .bq-step-body {
+    padding: 14px 8px !important;
+    overflow: visible !important;
+    max-width: 100% !important;
+  }
+
+  .bq-step-header {
+    padding: 12px 12px;
+    overflow: visible;
+  }
+
+  .bq-row,
+  .bq-row-2,
+  .bq-row-3,
+  .bq-row-4 {
+    flex-direction: column !important;
+    gap: 12px;
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
   }
 
   .bq-row-3 > .bq-field,
   .bq-row-4 > .bq-field,
   .bq-row-2 > .bq-field,
   .bq-row > .bq-field {
-    flex: 1 1 100%;
+    flex: 0 0 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  .bq-success-card {
-    padding: 28px 20px;
+  .bq-input,
+  .bq-select {
+    font-size: 16px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    padding: 0 38px 0 14px !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-}
 
-/* Mobile: 361px – 480px */
-@media (min-width: 361px) and (max-width: 480px) {
-  .bq-step-body {
-    padding: 16px 14px;
+  .bq-input[type="date"] {
+    font-size: 16px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    padding: 0 14px !important;
+    width: 100% !important;
+    max-width: calc(100vw - 24px) !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
   }
 
-  .bq-row-3 > .bq-field,
-  .bq-row-4 > .bq-field,
-  .bq-row-2 > .bq-field {
-    flex: 1 1 100%;
+  /* Prevent native date picker from overflowing */
+  .bq-field {
+    overflow: visible;
+    max-width: calc(100vw - 24px) !important;
+  }
+
+  .bq-field input[type="date"] {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .bq-textarea {
+    font-size: 16px !important;
+    min-height: 90px !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .bq-select-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    position: relative;
+  }
+
+  .bq-select {
+    width: 100% !important;
+    max-width: 100% !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+  }
+
+  .bq-select-arrow {
+    right: 14px;
+    font-size: 14px;
+  }
+
+  .country-selector-input {
+    font-size: 16px !important;
+    min-height: 48px !important;
+    padding: 12px 14px !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .bq-size-item {
+    min-width: 100px;
+  }
+
+  .bq-carousel-arrow {
+    width: 34px;
+    height: 34px;
+    font-size: 20px;
+  }
+
+  .bq-footer {
+    padding: 18px 10px;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .bq-submit-btn {
+    width: 100% !important;
+    padding: 14px 20px !important;
+  }
+
+  .bq-error {
+    margin: 12px 10px;
   }
 }
 
