@@ -782,31 +782,25 @@ const BookletQuote = () => {
     // /////////////////////////////////////////////////////////////////////////////////////////////////////
     return (
       <div key={subcategoryKey} className="bq-field">
-        <h1>Test</h1>
         <label className="bq-label">
           {label}
           {required && <span className="bq-req"> *</span>}
         </label>
         <div className="bq-select-wrap">
           <select
-            className="form-control p-2 bg-danger"
+            className="bq-select"
             value={value}
             onChange={(e) => handleChange(subcategoryKey, e.target.value)}
             disabled={attributes.length === 0}
           >
-            <option
-              value=""
-            >
+            <option value="">
               {attributes.length === 0
                 ? "No options available"
                 : `Select ${label}`}
             </option>
             {attributes.map((opt) => (
-              <option
-                key={opt}
-                value={opt}
-              >
-                <div>{opt}</div>
+              <option key={opt} value={opt}>
+                {opt}
               </option>
             ))}
           </select>
@@ -899,7 +893,6 @@ const BookletQuote = () => {
     );
   };
 
-  
   /* ─────────────────────────────────────────
      SUCCESS
   ───────────────────────────────────────── */
