@@ -48,7 +48,7 @@ const Footer = () => {
               </svg>
             </span>
             <div className="footer-phone-list">
-              <span>+91 354 3435 45674</span>
+              <span>+91 354 3435 456744</span>
               <span>+91 354 3435 45674</span>
               <span>+91 354 3435 45674</span>
             </div>
